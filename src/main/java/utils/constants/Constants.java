@@ -21,10 +21,10 @@ public class Constants {
 			 * 
 			 * Solo indicar el nombre del fichero a partir del directorio \db\
 			 */
-			public static final String databaseFile = "contactApp";
-			public static final String testDatabaseFile = "testContactApp";
-			public static final String originalDatabaseFile = OSIndependentPath("original","contactApp");
-			public static final String originalTestDatabaseFile = OSIndependentPath("original","testContactApp");
+			public static final String databaseFile = "videoChatApp";
+			public static final String testDatabaseFile = "testVideoChatApp";
+			public static final String originalDatabaseFile = OSIndependentPath("original","videoChatApp");
+			public static final String originalTestDatabaseFile = OSIndependentPath("original","testVideoChatApp");
 		}
 
 		public static class FXML {
@@ -34,6 +34,14 @@ public class Constants {
 			 * Solo indicar el nombre del fichero a partir del directorio
 			 * \application\view\fxml\
 			 */
+			public static final String rootLayout = "RootLayout";
+			public static final String mainView = "MainView";
+			public static final String videoScreenView = "VideoScreenView";
+			public static final String serverSettingsWindow = "ServerSettingsWindow";
+			public static final String contactCard = "ContactCard";
+			public static final String audioSettingsWindow = "AudioSettingsWindow";
+			public static final String LoginWindow = "LoginWindow";
+			public static final String RegisterUserWindow = "RegisterUserWindow";
 		}
 
 		public static class Properties {
@@ -62,6 +70,15 @@ public class Constants {
 			 * 
 			 * Solo indicar el nombre del fichero a partir del directorio \images\
 			 */
+			public static final String black = "black";
+			public static final String camIcon = "icon-cam";
+			public static final String activeVideoCall = "active-videocall";
+			public static final String pauseVideoCall = "pause-videocall";
+			public static final String stopVideoCall = "stop-videocall";
+			public static final String mutedMic = "muted-mic";
+			public static final String unmutedMic = "unmuted-mic";
+			public static final String mutedSpeaker = "muted-speaker";
+			public static final String unmutedSpeaker = "unmuted-speaker";
 		}
 
 		public static class Logs {
@@ -70,11 +87,11 @@ public class Constants {
 			 * 
 			 * Solo indicar el nombre del fichero a partir del directorio \tmp\logs\
 			 */
-			public static final String applicationLogFile = "contactapp";
-			public static final String viewLogFile = "view-contactapp";
-			public static final String modelLogFile = "model-contactapp";
-			public static final String controllerLogFile = "controller-contactapp";
-			public static final String utilsLogFile = "utils-contactapp";
+			public static final String applicationLogFile = "videochatapp";
+			public static final String viewLogFile = "view-videochatapp";
+			public static final String modelLogFile = "model-videochatapp";
+			public static final String controllerLogFile = "controller-videochatapp";
+			public static final String utilsLogFile = "utils-videochatapp";
 		}
 	}
 
@@ -82,6 +99,8 @@ public class Constants {
 		/*
 		 * Constantes de las vistas
 		 */
+		public static final String VideoChatAppTitle = "VideoChatAppTitle";
+//		public static final String VideoChatAppTitle = "";
 	}
 
 	public static final class Paths {
@@ -89,7 +108,7 @@ public class Constants {
 		 * Constantes de las rutas que van a ser utilizadas
 		 */
 
-		//==========================================================================================================================================================
+		//======================================================================================================
 		
 		// ##########################      Origins     ################################
 		
@@ -123,7 +142,7 @@ public class Constants {
 		public static final String fromRootDirToProjectDir = System.getProperty("user.dir");
 		// ############################################################################
 
-		//==========================================================================================================================================================
+		//=========================================================================================================
 		
 		// ##########################     Filepaths    ################################
 		

@@ -103,23 +103,31 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 
 	public InputStream toInputStream() {
 		InputStream is = null;
+		String filepath = null;
 		try {
 			switch (type) {
 			case CSS:
+				filepath = ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
 				is = new FileInputStream(ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case DATABASE:
+				filepath = ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
 				is = new FileInputStream(ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case FXML:
+				filepath = ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
 				is = new FileInputStream(ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case PNG:
+				filepath = ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
 				is = new FileInputStream(ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case LOGS:
+				filepath = ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, path);
 				is = new FileInputStream(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, path));
 			case PROPERTIES:
+				filepath = ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
 				is = new FileInputStream(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			}
 		} catch (FileNotFoundException e) {
-			throw new ResourceAccessException(path);
+			System.err.println(filepath);
+			throw new ResourceAccessException(filepath);
 		}
 		return is;
 	}

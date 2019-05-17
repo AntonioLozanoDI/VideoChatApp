@@ -13,9 +13,7 @@ public class ResourcePathFactory {
 	}
 	
 	private static String fullPath(String pathWithoutExt, String ext) {
-		String fullPath = String.format("%s.%s", pathWithoutExt, ext);
-		System.out.println(fullPath);
-		return fullPath;
+		return String.format("%s.%s", pathWithoutExt, ext);
 	}
 	
 	private static String formatFileNameFromBin(OriginPathToBin origin, String directory, String name, String ext) {

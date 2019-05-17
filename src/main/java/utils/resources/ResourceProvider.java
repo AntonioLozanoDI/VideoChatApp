@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 
 public interface ResourceProvider {
 	
+	//public void show();
+	
 	public File toFile();
 
 	public URL toURL();
