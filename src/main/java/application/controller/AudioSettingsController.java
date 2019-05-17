@@ -17,8 +17,8 @@ import com.sp.dialogs.DialogBuilder;
 
 import application.model.AudioSettingsModel;
 import application.model.dao.AudioSettingsDAO;
-import application.services.player.audio.AudioPlayerService;
-import application.services.recorder.audio.AudioRecordingService;
+import application.services.audio.player.AudioPlayerService;
+import application.services.audio.recorder.AudioRecordingService;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -13,8 +13,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		DatabaseHelper.askApplicationDatabase();
 		DatabaseHelper.ensureDatabaseExists();
-		if(Math.random() + 3 <2)
-			ApplicationModal.build(LoginWindow.class, null).showView();
+		//	ApplicationModal.build(LoginWindow.class, null).showView();
 		ApplicationView.launchView(VideoChatAppView.class, primaryStage, true);
 	}
 	

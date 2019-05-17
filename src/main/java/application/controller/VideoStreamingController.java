@@ -1,6 +1,6 @@
 package application.controller;
 
-import application.services.manager.VideoChatServiceManager;
+import application.services.VideoChatServiceManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

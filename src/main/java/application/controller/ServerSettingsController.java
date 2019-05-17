@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import application.services.network.streaming.receiver.audio.AudioStreamingReceiverService;
-import application.services.network.streaming.receiver.video.VideoStreamingReceiverService;
+import application.services.audio.receiver.AudioStreamingReceiverService;
+import application.services.video.receiver.VideoStreamingReceiverService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;

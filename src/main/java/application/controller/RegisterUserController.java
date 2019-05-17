@@ -1,7 +1,5 @@
 package application.controller;
 
-import com.diproject.commons.apiclient.UserClient;
-import com.diproject.commons.model.UserNew;
 import com.sp.fxutils.validation.FXUtils;
 
 import javafx.fxml.FXML;
@@ -45,11 +43,11 @@ public class RegisterUserController {
 	@FXML
 	private void registerUser() {
 		showFailedRegister(false);
-		UserNew user = null;
+		
 		boolean ok = false;
 		boolean validParams = checkTextFields();
 		if (validParams) {
-			user = new UserNew();
+			
 			String server = serverField.getText();
 
 			//ok = client.signup(user);
