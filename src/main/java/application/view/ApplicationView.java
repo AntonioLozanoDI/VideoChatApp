@@ -16,6 +16,10 @@ public abstract class ApplicationView {
 	protected abstract void setScene(Stage primaryStage);
 
 	public static final <T extends ApplicationView> T launchView(Class<T> viewClass, Stage primaryStage) {
+		return launchView(viewClass, primaryStage,false);
+	}
+	
+	public static final <T extends ApplicationView> T launchView(Class<T> viewClass, Stage primaryStage, boolean maximized) {
 		T view = null;
 		try {
 			view = viewClass.newInstance();
@@ -26,6 +30,7 @@ public abstract class ApplicationView {
 			logger.info(String.format("%s successfully initialized. Showing view ...", viewClass.getSimpleName()));
 			
 			primaryStage.show();
+			primaryStage.setMaximized(true);
 		} catch (Exception e) {
 			String trace = String.format(
 					"An error ocurred during %s launch. Message: %s%nParams%n\t- classToLoad: %s%n\t- loadedView: %s%n\t- ExceptionType: %s%n",
