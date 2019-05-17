@@ -1,0 +1,63 @@
+#ipAddressLabelInvalid {
+	-fx-font-size: 10.0pt;
+	-fx-text-fill: red;
+	-fx-font-weight: bold;
+}
+
+#ipAddressLabelValid {
+	-fx-font-size: 10.0pt;
+	-fx-text-fill: green;
+	-fx-font-weight: bold;
+}
+
+#registerLabelDefault {
+	-fx-underline: false;
+	-fx-text-fill: dodgerblue;
+}
+
+#registerLabelEnter {
+	-fx-underline: true;
+	-fx-text-fill: dodgerblue;
+}
+
+#loginLabelDefault {
+	-fx-underline: false;
+	-fx-text-fill: dodgerblue;
+}
+
+#loginLabelEnter {
+	-fx-underline: true;
+	-fx-text-fill: dodgerblue;
+}
+
+#warningLabel{
+	-fx-font-size: 10.0pt;
+	-fx-text-fill: red;
+}
+
+.root {
+	-fx-control-inner-background-alt: -fx-control-inner-background;
+}
+
+.roundedButton{
+	-fx-background-radius: 5.5em; 
+	-fx-text-fill: red;
+	-fx-min-width: 30.0px; 
+	-fx-min-height: 30.0px; 
+	-fx-max-width: 30.0px;
+	-fx-max-height: 30.0px;	
+}
+
+.contactCard{
+	-fx-background-color: seashell;
+	-fx-border-color: silver;
+	-fx-text-fill: red; 
+}
+
+.contactLabel{
+	-fx-text-fill: black; 
+}
+.contactLabel:selected{
+	-fx-text-fill: black; 
+}
+
