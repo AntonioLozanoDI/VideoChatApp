@@ -32,8 +32,12 @@ public abstract class Service extends Thread {
 	}
 	
 	public final void stopService() {
-		serviceStoped = true;
-		onStopedService();
+		try {
+			serviceStoped = true;
+			onStopedService();
+		} catch (Exception e) {
+			System.out.println(LoggingUtils.getStackTrace(e));
+		}
 	}
 	
 	public final void resumeService() {
