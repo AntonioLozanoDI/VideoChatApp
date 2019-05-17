@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.omg.Messaging.SyncScopeHelper;
-
 import utils.logging.LoggingUtils;
 
 public abstract class Service extends Thread {
@@ -65,19 +63,8 @@ public abstract class Service extends Thread {
 	
 	protected abstract void onStopedService();
 
-	protected void kill() {
-		interrupt();
-	}
-	
 	public static void stopServices() {
 		services.forEach(Service::stopService);
-		try {
-			Thread.sleep(2000);
-		} catch (Exception e) {}
-		services.forEach(Service::kill);
-		try {
-			Thread.sleep(5000);
-		} catch (Exception e) {}
-		Thread.getAllStackTraces().keySet().forEach(System.out::println);;
+		services.forEach(Service::interrupt);
 	}
 }
