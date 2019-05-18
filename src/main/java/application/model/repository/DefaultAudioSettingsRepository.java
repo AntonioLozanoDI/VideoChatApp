@@ -49,7 +49,7 @@ public class DefaultAudioSettingsRepository {
 				defaultConfigId = rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute SELECT statement into DefaultAudioSettings table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute SELECT statement into DefaultAudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 		return defaultConfigId;
@@ -63,7 +63,7 @@ public class DefaultAudioSettingsRepository {
 			st.executeUpdate();
 			defaultConfigId = setting.getId();
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute UPDATE statement into DefaultAudioSettings table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute UPDATE statement into DefaultAudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 	}

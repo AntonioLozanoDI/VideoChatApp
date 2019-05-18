@@ -76,7 +76,7 @@ public class AudioSettingsRepository {
 				settings.add(audio);
 			}
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute SELECT statement into AudioSettings table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute SELECT statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 		return settings == null ? Collections.emptyList() : settings;
@@ -90,7 +90,7 @@ public class AudioSettingsRepository {
 			ResultSet rs = st.executeQuery();
 			id = rs.getInt(1);
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute SELECT statement to sqlite_sequence table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute SELECT statement to sqlite_sequence table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 		return id;
@@ -102,7 +102,7 @@ public class AudioSettingsRepository {
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute INSERT statement into AudioSettings table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute INSERT statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 	}
@@ -113,7 +113,7 @@ public class AudioSettingsRepository {
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute DELETE statement into AudioSettings table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute DELETE statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 	}
@@ -124,7 +124,7 @@ public class AudioSettingsRepository {
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
-			String trace = String.format("Error trying to execute UPDATE statement into AudioSettings table in %s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			String trace = String.format("Error trying to execute UPDATE statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 	}

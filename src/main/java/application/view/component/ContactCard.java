@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import application.controller.ContactCardController;
 import application.model.ContactModel;
+import application.model.dao.ContactDAO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -37,8 +38,6 @@ public class ContactCard {
 			cc.contactInfo = contact;
 			cc.controller = controller;
 			cc.pane = pane;
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,11 +57,16 @@ public class ContactCard {
 	}
 
 	public static List<ContactCard> demoData() {
-		ContactModel c = new ContactModel("Maria", "Diaz", "Muñoz");
-		ContactModel c2 = new ContactModel("David", "Robles", "Garcia");
-		ContactModel c3 = new ContactModel("Susana", "Marquez", "Gonzalez");
-		ContactModel c4 = new ContactModel("Carlos", "Ortega", "Martinez");
+		ContactDAO dao = ContactDAO.getInstance();
 		
-		return Arrays.asList(c,c2,c3,c4).stream().map(ContactCard::fromContact).collect(Collectors.toList());
+//		ContactModel c = new ContactModel("Maria", "Diaz", "Muñoz");
+//		ContactModel c2 = new ContactModel("David", "Robles", "Garcia");
+//		ContactModel c3 = new ContactModel("Susana", "Marquez", "Gonzalez");
+//		ContactModel c4 = new ContactModel("Carlos", "Ortega", "Martinez");
+//		Arrays.asList(c,c2,c3,c4).stream().forEach(dao::saveContact);
+//		return Arrays.asList(c,c2,c3,c4).stream().map(ContactCard::fromContact).collect(Collectors.toList());
+		
+		return dao.getAllContacts().stream().map(ContactCard::fromContact).collect(Collectors.toList());
+		
 	}
 }
