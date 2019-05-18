@@ -10,16 +10,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="322.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.RegisterUserController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.RegisterUserController">
    <center>
-      <AnchorPane prefHeight="375.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="414.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="50.0" layoutY="17.0" prefHeight="247.0" prefWidth="200.0" spacing="10.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+            <VBox layoutX="50.0" layoutY="17.0" prefHeight="402.0" prefWidth="200.0" spacing="10.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
                <children>
                   <Pane prefWidth="0.0">
                      <children>
-                        <Label prefHeight="25.0" prefWidth="200.0" text="User Name" />
-                        <TextField fx:id="usernameField" layoutY="26.0" prefHeight="25.0" prefWidth="200.0" />
+                        <Label prefHeight="25.0" prefWidth="200.0" text="Nombre" />
+                        <TextField fx:id="nombreField" layoutY="26.0" prefHeight="25.0" prefWidth="200.0" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="52.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="200.0" text="Primer Apellido" />
+                        <TextField fx:id="apellido1Field" layoutY="26.0" prefHeight="25.0" prefWidth="200.0" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="52.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="200.0" text="Segundo Apellido" />
+                        <TextField fx:id="apellido2Field" layoutY="26.0" prefHeight="25.0" prefWidth="200.0" />
                      </children>
                   </Pane>
                   <Pane prefHeight="52.0" prefWidth="200.0">
@@ -36,7 +48,7 @@
                   </Pane>
                   <Pane prefHeight="52.0" prefWidth="200.0">
                      <children>
-                        <Label prefHeight="25.0" prefWidth="200.0" text="Server" />
+                        <Label prefHeight="25.0" prefWidth="200.0" text="Servidor" />
                         <TextField fx:id="serverField" layoutY="26.0" prefHeight="25.0" prefWidth="200.0" />
                      </children>
                   </Pane>
@@ -57,7 +69,7 @@
    <bottom>
       <AnchorPane prefHeight="49.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="registerWarning" layoutX="42.0" layoutY="16.0" prefHeight="7.0" prefWidth="217.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="16.0" />
+            <Label fx:id="registerWarning" layoutX="42.0" layoutY="8.0" prefHeight="31.0" prefWidth="217.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="8.0" />
          </children>
       </AnchorPane>
    </bottom>

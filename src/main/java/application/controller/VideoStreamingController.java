@@ -47,6 +47,7 @@ public class VideoStreamingController {
 	private boolean pausedCallB;
 	private boolean stopedCall;
 	private boolean moved;
+	private boolean enableGlassPane;
 	
 	private MainController mainController;
 	
@@ -85,6 +86,7 @@ public class VideoStreamingController {
 
 	@FXML
 	public void initCall() {
+		enableGlassPane = true;
 		VideoChatServiceManager.initCall();
 		initCallButton.setVisible(false);
 		showButtons(true);
@@ -93,6 +95,7 @@ public class VideoStreamingController {
 	@FXML
 	private void pauseCall() {
 		pausedCallB = !pausedCallB;
+		enableGlassPane = false;
 		VideoChatServiceManager.pauseCall();
 		refreshButtons();
 	}
@@ -100,6 +103,7 @@ public class VideoStreamingController {
 	@FXML
 	private void stopCall() {
 		stopedCall = !stopedCall;
+		enableGlassPane = false;
 		VideoChatServiceManager.stopCall();
 		hideVideoScreen();
 		initButtonImages();
@@ -137,28 +141,30 @@ public class VideoStreamingController {
 			double opacity = 1;
 			boolean opacityFull = true;
 			while (true) {
-				while (!moved) {
-					opacityFull = false;
-					try {
-						if (opacity >= 0.15) {
-							opacity -= 0.05;
-						} else {
-							opacity = 0;
+				if(enableGlassPane) {
+					while (!moved) {
+						opacityFull = false;
+						try {
+							if (opacity >= 0.15) {
+								opacity -= 0.05;
+							} else {
+								opacity = 0;
+							}
+							glassPane.setOpacity(opacity);
+							Thread.sleep(20);
+						} catch (InterruptedException e) {
 						}
+					}
+					if (!opacityFull) {
+						opacity = 1;
 						glassPane.setOpacity(opacity);
-						Thread.sleep(20);
+					}
+					try {
+						Thread.sleep(15000);
 					} catch (InterruptedException e) {
 					}
+					moved = false;
 				}
-				if (!opacityFull) {
-					opacity = 1;
-					glassPane.setOpacity(opacity);
-				}
-				try {
-					Thread.sleep(15000);
-				} catch (InterruptedException e) {
-				}
-				moved = false;
 			}
 		};
 		new Thread(glassPaneTask).start();

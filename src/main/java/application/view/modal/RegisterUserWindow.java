@@ -42,7 +42,6 @@ public class RegisterUserWindow extends ApplicationModal {
 
 			// Set the stage into the controller.
 			controller = (RegisterUserController) loader.getController();
-			controller.setPrimaryStage(owner);
 			controller.setWindowStage(formStage);
 
 			logger.finer(String.format("%s successfully loaded. Resource loaded: %s", getClass().getSimpleName(), LoggingUtils.cleanFXMLPath(resource.getPath())));
