@@ -76,7 +76,6 @@ public class VideoChatAppView extends ApplicationView {
 		rootPane.setCenter(mainPane);
 		rootController.setMainController(mainController);
 		rootController.setPrimaryStage(primaryStage);
-		mainController.setPrimaryStage(primaryStage);
 		Scene scene = new Scene(rootPane,800,600);
 		scene.getStylesheets().add(ApplicationResourceProvider.getCSSFile(Constants.Files.CSS.defaultTheme).toURL().toExternalForm());
 		primaryStage.setTitle(Constants.Views.VideoChatAppTitle);

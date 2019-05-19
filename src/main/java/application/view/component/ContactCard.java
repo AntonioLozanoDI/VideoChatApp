@@ -13,13 +13,11 @@ import javafx.scene.layout.Pane;
 import utils.constants.Constants;
 import utils.resources.ApplicationResourceProvider;
 
-public class ContactCard {
+public class ContactCard extends ContactListComponent<AnchorPane> {
 
 	private ContactCardController controller;
 	
 	private ContactModel contactInfo;
-
-	private Pane pane; 
 	
 	public static ContactCard fromContact(ContactModel contact) {
 		ContactCard cc = null;
@@ -37,7 +35,7 @@ public class ContactCard {
 			cc = new ContactCard();
 			cc.contactInfo = contact;
 			cc.controller = controller;
-			cc.pane = pane;
+			cc.parent = pane;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -50,23 +48,5 @@ public class ContactCard {
 
 	public ContactModel getContactInfo() {
 		return contactInfo;
-	}
-	
-	public Pane getPane() {
-		return pane;
-	}
-
-	public static List<ContactCard> demoData() {
-		ContactDAO dao = ContactDAO.getInstance();
-		
-//		ContactModel c = new ContactModel("Maria", "Diaz", "Muñoz");
-//		ContactModel c2 = new ContactModel("David", "Robles", "Garcia");
-//		ContactModel c3 = new ContactModel("Susana", "Marquez", "Gonzalez");
-//		ContactModel c4 = new ContactModel("Carlos", "Ortega", "Martinez");
-//		Arrays.asList(c,c2,c3,c4).stream().forEach(dao::saveContact);
-//		return Arrays.asList(c,c2,c3,c4).stream().map(ContactCard::fromContact).collect(Collectors.toList());
-		
-		return dao.getAllContacts().stream().map(ContactCard::fromContact).collect(Collectors.toList());
-		
 	}
 }

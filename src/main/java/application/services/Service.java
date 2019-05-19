@@ -48,12 +48,14 @@ public abstract class Service extends Thread {
 		return isAlive() ? !isInterrupted() && !serviceStoped : false;
 	}
 
+	protected final boolean isStopped() {
+		return serviceStoped;
+	}
+	
 	@Override
 	public void run() {
-		serviceStoped = false;
 		while(!isInterrupted()) {
 			if(!serviceStoped) {
-				System.out.println("not stoped");
 				try {
 					if(!serviceTasks.isEmpty())
 					serviceTasks.forEach(ServiceTask::call);
@@ -71,4 +73,6 @@ public abstract class Service extends Thread {
 		services.forEach(Service::stopService);
 		services.forEach(Service::interrupt);
 	}
+	
+	public abstract void status();
 }

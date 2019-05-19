@@ -35,5 +35,4 @@ public class ContactDAO {
 	public void saveContact(ContactModel contact) {
 		contactRepository.insert(contact);
 	}
-
 }

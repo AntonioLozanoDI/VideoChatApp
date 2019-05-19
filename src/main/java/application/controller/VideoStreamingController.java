@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import utils.constants.Constants;
+import utils.logging.LoggingUtils;
 import utils.resources.ApplicationResourceProvider;
 
 public class VideoStreamingController {
@@ -53,21 +54,28 @@ public class VideoStreamingController {
 	
 	@FXML
 	private void initialize() {
+		System.out.println("initialized");
 		setupGlassPane();
-		initButtonImages();
-		VideoChatServiceManager.setupPlayer(imageView);
 		
 		micButton.setGraphic(micView);
 		speakerButton.setGraphic(speakerView);
 		stopButton.setGraphic(stopView);
 		pauseButton.setGraphic(pauseView);
 		
+		VideoChatServiceManager.setupPlayer(imageView);
+		
+		initializeViewComponents();
+	}
+	
+	private void initializeViewComponents() {
+		initButtonImages();
+		
 		mutedMicB = false;
 		mutedSpeakerB = false;
 		pausedCallB = false;
 		
+		initCallButton.setVisible(true);
 		showButtons(false);
-		
 	}
 	
 	private void showButtons(boolean b) {
@@ -107,6 +115,7 @@ public class VideoStreamingController {
 		VideoChatServiceManager.stopCall();
 		hideVideoScreen();
 		initButtonImages();
+		initializeViewComponents();
 	}
 
 	@FXML
@@ -141,29 +150,28 @@ public class VideoStreamingController {
 			double opacity = 1;
 			boolean opacityFull = true;
 			while (true) {
-				if(enableGlassPane) {
-					while (!moved) {
-						opacityFull = false;
-						try {
+				try {
+					if(enableGlassPane) {
+						while (!moved) {
+							opacityFull = false;
 							if (opacity >= 0.15) {
 								opacity -= 0.05;
 							} else {
 								opacity = 0;
 							}
 							glassPane.setOpacity(opacity);
-							Thread.sleep(20);
-						} catch (InterruptedException e) {
+							Thread.sleep(20);	//SLEEP
 						}
+						if (!opacityFull) {
+							opacity = 1;
+							glassPane.setOpacity(opacity);
+						}
+						Thread.sleep(15000);	//SLEEP
+						moved = false;
 					}
-					if (!opacityFull) {
-						opacity = 1;
-						glassPane.setOpacity(opacity);
-					}
-					try {
-						Thread.sleep(15000);
-					} catch (InterruptedException e) {
-					}
-					moved = false;
+					Thread.sleep(20);	//SLEEP  //no quitar..
+				} catch (Exception e) {
+					System.out.println(LoggingUtils.getStackTrace(e));
 				}
 			}
 		};
@@ -176,5 +184,6 @@ public class VideoStreamingController {
 	
 	private void hideVideoScreen() {
 		mainController.hideVideoScreen();
+		imageView.setImage(null);
 	}
 }

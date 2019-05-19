@@ -61,8 +61,7 @@ public class VideoChatServiceManager {
 
 		videoRecorder.addServiceTask(() -> {
 			videoSender.setImage(videoRecorder.getLastFrame());
-		});
-
+		});		
 	}
 
 	public static void setupPlayer(ImageView view) {
@@ -73,11 +72,11 @@ public class VideoChatServiceManager {
 		audioSender.startSender();
 		videoSender.startSender();
 		
-		audioRecorder.startRecording();
-		videoRecorder.startRecording();
+		audioRecorder.startRecorder();
+		videoRecorder.startRecorder();
 		
-		audioReceiver.startReceiving();
-		videoReceiver.startReceiving();
+		audioReceiver.startReceiver();
+		videoReceiver.startReceiver();
 
 		audioPlayer.startPlayer();
 		videoPlayer.startPlayer();
@@ -88,30 +87,35 @@ public class VideoChatServiceManager {
 		if (pausedCall) {
 			audioPlayer.pausePlayer();
 			videoPlayer.pausePlayer();
-			audioRecorder.pauseRecording();
-			videoRecorder.pauseRecording();
+			audioRecorder.pauseRecorder();
+			videoRecorder.pauseRecorder();
 		} else {
 			audioPlayer.resumePlayer();
 			videoPlayer.resumePlayer();
-			audioRecorder.resumeRecording();
-			videoRecorder.resumeRecording();
+			audioRecorder.resumeRecorder();
+			videoRecorder.resumeRecorder();
 		}
-
 	}
 
 	public static void stopCall() {
 		audioPlayer.stopService();
 		videoPlayer.stopService();
+		
 		audioRecorder.stopService();
 		videoRecorder.stopService();
-
+		
+		audioSender.stopService();
+		videoSender.stopService();
+		
+		audioReceiver.stopService();
+		videoReceiver.stopService();
 	}
 
 	public static void toggleMic() {
 		if (activeMic) {
-			audioRecorder.pauseRecording();
+			audioRecorder.pauseRecorder();
 		} else {
-			audioRecorder.resumeRecording();
+			audioRecorder.resumeRecorder();
 		}
 		activeMic = !activeMic;
 	}
