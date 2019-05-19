@@ -35,6 +35,8 @@ public class AudioSettingsModel {
 
 	private BooleanProperty outBigEndianProperty;
 
+	private StringProperty captureDeviceProperty;
+
 	public AudioSettingsModel() {
 		configNameProperty = new SimpleStringProperty();
 		
@@ -49,6 +51,8 @@ public class AudioSettingsModel {
 		outChannelsProperty = new SimpleIntegerProperty();
 		outSignedProperty = new SimpleBooleanProperty();
 		outBigEndianProperty = new SimpleBooleanProperty();
+		
+		captureDeviceProperty = new SimpleStringProperty();
 	}
 
 	public int getId() {
@@ -134,6 +138,14 @@ public class AudioSettingsModel {
 	public Boolean getInBigEndian() {
 		return inBigEndianProperty.get();
 	}
+	
+	public String getInSignedStr() {
+		return String.valueOf(inSignedProperty.get());
+	}
+
+	public String getInBigEndianStr() {
+		return String.valueOf(inBigEndianProperty.get());
+	}
 
 	public float getOutSampleRate() {
 		return outSampleRateProperty.get();
@@ -153,6 +165,14 @@ public class AudioSettingsModel {
 
 	public Boolean getOutBigEndian() {
 		return outBigEndianProperty.get();
+	}
+	
+	public String getOutSignedStr() {
+		return String.valueOf(outSignedProperty.get());
+	}
+
+	public String getOutBigEndianStr() {
+		return String.valueOf(outBigEndianProperty.get());
 	}
 
 	/***********************************************
@@ -225,6 +245,15 @@ public class AudioSettingsModel {
 	public void setOutBigEndian(String s) {
 		Boolean value = Boolean.valueOf(s);
 		outBigEndianProperty.set(value);
+	}
+
+	public String getCaptureDevice() {
+		String device = captureDeviceProperty.get(); 
+		return device != null ? device : "";
+	}
+
+	public void setCaptureDevice(String captureDevice) {
+		this.captureDeviceProperty.set(captureDevice);;
 	}
 
 	public static AudioSettingsModel fromValues(String configName, float sampleRateIn, int bitSizeIn, int channelsIn,

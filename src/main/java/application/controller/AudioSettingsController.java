@@ -3,6 +3,7 @@ package application.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -75,14 +76,15 @@ public class AudioSettingsController {
 
 	private AudioSettingsModel defaultSettings;
 
+	private AudioSettingsModel lastSelectedSetting;
+	
 	private boolean dataUnsync;
 
 	private Stage stage;
 
 	private Info captureDevice;
 	
-	private ConfiguredLines lines;
-	private AudioSettingsModel lastSelectedSetting;
+	private ConfiguredLines lines;	
 
 	@FXML
 	private void initialize() {
@@ -163,9 +165,9 @@ public class AudioSettingsController {
 		ObservableList<Mixer.Info> outCaptureMixers = FXCollections.observableArrayList();
 		Mixer.Info[] minfoSet = AudioSystem.getMixerInfo();
 		for (Info mix : minfoSet) {
-			info.add(mix);
 			if (mix.getDescription().contains("Capture")) {
 				outCaptureMixers.add(mix);
+				info.add(mix);
 			}
 		}
 		inMixers.setItems(outCaptureMixers);
@@ -198,6 +200,14 @@ public class AudioSettingsController {
 		outChannels.setText(String.valueOf(setting.getOutChannels()));
 		outSigned.setSelected(setting.getOutSigned().booleanValue());
 		outBigEndian.setSelected(setting.getOutBigEndian().booleanValue());
+		
+		setCaptureDevice(setting);
+	}
+
+	private void setCaptureDevice(AudioSettingsModel setting) {
+		Optional<Info> device = info.stream().filter(cd -> setting.getCaptureDevice().equals(cd.getName())).findFirst();
+		if(device.isPresent())
+			inMixers.getSelectionModel().select(device.get());
 	}
 
 	@FXML
@@ -205,7 +215,7 @@ public class AudioSettingsController {
 		if(dataUnsync) {
 			 Optional<ButtonType> btn = DialogBuilder
 					 .confirmation()
-					 .header("¿ Desea guardar los cambios realizados en la configuracion de audio ?")
+					 .header(String.format("¿Desea guardar los cambios realizados en la configuracion de audio %n\t-> (%s)?", lastSelectedSetting.getConfigName()))
 					 .finish()
 					 .alert()
 					 .showAndWait();
@@ -222,31 +232,7 @@ public class AudioSettingsController {
 	}
 
 	private boolean saveChanges() {
-		float sampleRateIn = Float.parseFloat(inSampleRate.textProperty().get());
-		int bitSizeIn = Integer.parseInt(inBitSize.textProperty().get());
-		int channelsIn = Integer.parseInt(inChannels.textProperty().get());
-		boolean signedIn = inSigned.isSelected();
-		boolean bigEndianIn = inBigEndian.isSelected();
-
-		float sampleRateOut = Float.parseFloat(outSampleRate.textProperty().get());
-		int bitSizeOut = Integer.parseInt(outBitSize.textProperty().get());
-		int channelsOut = Integer.parseInt(outChannels.textProperty().get());
-		boolean signedOut = outSigned.isSelected();
-		boolean bigEndianOut = outBigEndian.isSelected();
 		
-		lastSelectedSetting.setInSampleRate(sampleRateIn);
-		lastSelectedSetting.setInBitSize(bitSizeIn);
-		lastSelectedSetting.setInChannels(channelsIn);
-		lastSelectedSetting.setInSigned(signedIn);
-		lastSelectedSetting.setInBigEndian(bigEndianIn);
-
-		lastSelectedSetting.setOutSampleRate(sampleRateOut);
-		lastSelectedSetting.setOutBitSize(bitSizeOut);
-		lastSelectedSetting.setOutChannels(channelsOut);
-		lastSelectedSetting.setOutSigned(signedOut);
-		lastSelectedSetting.setOutBigEndian(bigEndianOut);
-		
-		settingsDAO.updateAudioSetting(lastSelectedSetting);
 		
 		return false;
 	}
@@ -257,7 +243,7 @@ public class AudioSettingsController {
 	}
 
 	@FXML
-	private void createConfig() {
+	private void createConfig() {//TODO
 		if(isAudioDataConfigured()) {
 			int lastId = settingsDAO.getLastSettingId();
 			String configName = "AudioSetting - (" + (lastId) + ")";
@@ -281,6 +267,47 @@ public class AudioSettingsController {
 		}
 	}
 
+	@FXML
+	private void editConfig() {//TODO
+		if(isAudioDataConfigured() && lastSelectedSetting.getId() != 0) {
+			float sampleRateIn = Float.parseFloat(inSampleRate.textProperty().get());
+			int bitSizeIn = Integer.parseInt(inBitSize.textProperty().get());
+			int channelsIn = Integer.parseInt(inChannels.textProperty().get());
+			boolean signedIn = inSigned.isSelected();
+			boolean bigEndianIn = inBigEndian.isSelected();
+
+			float sampleRateOut = Float.parseFloat(outSampleRate.textProperty().get());
+			int bitSizeOut = Integer.parseInt(outBitSize.textProperty().get());
+			int channelsOut = Integer.parseInt(outChannels.textProperty().get());
+			boolean signedOut = outSigned.isSelected();
+			boolean bigEndianOut = outBigEndian.isSelected();
+			
+			lastSelectedSetting.setInSampleRate(sampleRateIn);
+			lastSelectedSetting.setInBitSize(bitSizeIn);
+			lastSelectedSetting.setInChannels(channelsIn);
+			lastSelectedSetting.setInSigned(signedIn);
+			lastSelectedSetting.setInBigEndian(bigEndianIn);
+
+			lastSelectedSetting.setOutSampleRate(sampleRateOut);
+			lastSelectedSetting.setOutBitSize(bitSizeOut);
+			lastSelectedSetting.setOutChannels(channelsOut);
+			lastSelectedSetting.setOutSigned(signedOut);
+			lastSelectedSetting.setOutBigEndian(bigEndianOut);
+			
+			lastSelectedSetting.setCaptureDevice(captureDevice == null ? "" : captureDevice.getName());
+			
+			settingsDAO.updateAudioSetting(lastSelectedSetting);
+		}
+		dataUnsync = false;
+	}
+	
+	@FXML
+	private void deleteConfig() {//TODO
+		settingsDAO.deleteAudioSetting(lastSelectedSetting);
+		clearData();
+		dataUnsync = false;
+	}
+	
 	public boolean isAudioDataConfigured() {
 		try {
 			lines = new ConfiguredLines();
@@ -329,6 +356,8 @@ public class AudioSettingsController {
 
 	private void setupChangesDetection() {
 
+		inMixers.getSelectionModel().selectedItemProperty().addListener(listener());
+		
 		TextField[] tfs = { inBitSize, inChannels, inSampleRate, outBitSize, outChannels, outSampleRate };
 		for (TextField tf : tfs) {
 			tf.textProperty().addListener(listener());
@@ -337,6 +366,21 @@ public class AudioSettingsController {
 		CheckBox[] cbs = { inSigned, inBigEndian, outBigEndian, outSigned };
 		for (CheckBox cb : cbs) {
 			cb.selectedProperty().addListener(listener());
+		}
+	}
+	
+	private void clearData() {
+
+		inMixers.getSelectionModel().clearSelection();
+		
+		TextField[] tfs = { inBitSize, inChannels, inSampleRate, outBitSize, outChannels, outSampleRate };
+		for (TextField tf : tfs) {
+			tf.clear();
+		}
+
+		CheckBox[] cbs = { inSigned, inBigEndian, outBigEndian, outSigned };
+		for (CheckBox cb : cbs) {
+			cb.setSelected(false);
 		}
 	}
 

@@ -3,10 +3,12 @@ package application.controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
 import application.view.component.ContactCard;
+import application.view.component.CreateContactCard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -35,10 +37,6 @@ public class MainController {
 	@FXML
 	private ImageView camIcon;
 
-	private Stage primaryStage;
-
-	private List<ContactModel> contacts = new ArrayList<>();
-
 	private ObservableList<Pane> contactCards = FXCollections.<Pane>observableArrayList();
 	
 	private VideoStreamingController videoStreamingController;
@@ -58,38 +56,34 @@ public class MainController {
 	}
 
 	private void setFirstContactCard() {
-		// TODO Auto-generated method stub
+//		CreateContactCard createCard = CreateContactCard.create();		
 		
 	}
-
-	public void setPrimaryStage(Stage primaryStage) {
-		this.primaryStage = primaryStage;
-	}
-
+	
 	private void setupContacts() {
 		contactDAO.getAllContacts();
-		List<ContactCard> demo = ContactCard.demoData();
+		List<ContactCard> demo = contactDAO.getAllContacts().stream().map(ContactCard::fromContact).collect(Collectors.toList());
 		for(ContactCard cc : demo)
-			contactCards.add(cc.getPane());
+			contactCards.add(cc.getParent());
 		
 		listView.setItems(contactCards);
 	}
 
 	public void setupVideoScreen() {
-		URL resource = null;
-		try {
-			FXMLLoader screenLoader = new FXMLLoader();
-			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.videoScreenView).toURL();
-			screenLoader.setLocation(resource);
-			videoScreen = screenLoader.load();
-			videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
-			videoScreen.prefWidthProperty().bind(rightPane.widthProperty());
-			videoStreamingController = screenLoader.getController();
-			videoStreamingController.setMainController(this);
-			rightPane.getChildren().add(videoScreen);
-		} catch (Exception e) {
-			System.out.println(LoggingUtils.getStackTrace(e));
+		if(videoScreen == null) {
+			try {
+				FXMLLoader screenLoader = new FXMLLoader();
+				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.videoScreenView).toURL());
+				videoScreen = screenLoader.load();
+				videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
+				videoScreen.prefWidthProperty().bind(rightPane.widthProperty());
+				videoStreamingController = screenLoader.getController();
+				videoStreamingController.setMainController(this);
+			} catch (Exception e) {
+				System.out.println(LoggingUtils.getStackTrace(e));
+			}
 		}
+		rightPane.getChildren().add(videoScreen);
 	}
 	
 	public void hideVideoScreen() {

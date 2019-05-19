@@ -22,13 +22,13 @@ public class AudioSettingsRepository {
 
 	private final String insertStmt = "INSERT INTO AudioSettings (config_name,out_sample_rate,out_sample_size_bits,out_channels,out_signed,out_big_endian,in_sample_rate,in_sample_size_bits,in_channels,in_signed,in_big_endian) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
-	private final String deleteStmt = "DELETE FROM AudioSettings WHERE config_name = ? AND out_sample_rate = ? AND out_sample_size_bits = ? AND out_channels = ? AND out_signed = ? AND out_big_endian = ? AND in_sample_rate = ? AND in_sample_size_bits = ? AND in_channels = ? AND in_signed = ? AND in_big_endian = ?;";
+	private final String deleteStmt = "DELETE FROM AudioSettings WHERE config_name = ? AND out_sample_rate = ? AND out_sample_size_bits = ? AND out_channels = ? AND out_signed = ? AND out_big_endian = ? AND in_sample_rate = ? AND in_sample_size_bits = ? AND in_channels = ? AND in_signed = ? AND in_big_endian = ? AND id = ?;";
 
 	private final String selectAllStmt = "SELECT * FROM AudioSettings;";
 
 	private final String lastIdStmt = "SELECT seq FROM sqlite_sequence WHERE name = ?;";
 	
-	private final String updateStmt = "UPDATE AudioSettings SET out_sample_rate = ?, out_sample_size_bits = ?, out_channels = ?, out_signed = ?, out_big_endian = ?, in_sample_rate = ?, in_sample_size_bits = ?, in_channels = ?, in_signed = ?, in_big_endian = ? WHERE config_name = ?;";
+	private final String updateStmt = "UPDATE AudioSettings SET config_name = ?, out_sample_rate = ?, out_sample_size_bits = ?, out_channels = ?, out_signed = ?, out_big_endian = ?, in_sample_rate = ?, in_sample_size_bits = ?, in_channels = ?, in_signed = ?, in_big_endian = ? WHERE id = ?;";
 
 	private Connection con = null;
 
@@ -62,14 +62,12 @@ public class AudioSettingsRepository {
 				audio.setOutSampleRate(rs.getFloat(3));
 				audio.setOutBitSize(rs.getInt(4));
 				audio.setOutChannels(rs.getInt(5));
-				
 				audio.setOutSigned(rs.getString(6));
 				audio.setOutBigEndian(rs.getString(7));
 				
 				audio.setInSampleRate(rs.getFloat(8));
 				audio.setInBitSize(rs.getInt(9));
 				audio.setInChannels(rs.getInt(10));
-				
 				audio.setInSigned(rs.getString(11));
 				audio.setInBigEndian(rs.getString(12));
 
@@ -98,7 +96,20 @@ public class AudioSettingsRepository {
 
 	public void insert(AudioSettingsModel setting) {
 		try {
-			PreparedStatement st = con.prepareStatement(insertStmt);
+			PreparedStatement st = con.prepareStatement(insertStmt);//  (config_name,out_sample_rate,out_sample_size_bits,out_channels,out_signed,out_big_endian,in_sample_rate,in_sample_size_bits,in_channels,in_signed,in_big_endian) 
+			st.setString(1, setting.getConfigName());
+			
+			st.setFloat(2, setting.getOutSampleRate());
+			st.setInt(3, setting.getOutBitSize());
+			st.setInt(4, setting.getOutChannels());
+			st.setString(5, setting.getOutSignedStr());
+			st.setString(6, setting.getOutBigEndianStr());
+			
+			st.setFloat(7, setting.getInSampleRate());
+			st.setInt(8, setting.getInBitSize());
+			st.setInt(9, setting.getInChannels());
+			st.setString(10, setting.getInSignedStr());
+			st.setString(11, setting.getInBigEndianStr());
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
@@ -110,7 +121,21 @@ public class AudioSettingsRepository {
 	public void delete(AudioSettingsModel setting) {
 		try {
 			PreparedStatement st = con.prepareStatement(deleteStmt);
+			st.setString(1, setting.getConfigName());
 			
+			st.setFloat(2, setting.getOutSampleRate());
+			st.setInt(3, setting.getOutBitSize());
+			st.setInt(4, setting.getOutChannels());
+			st.setString(5, setting.getOutSignedStr());
+			st.setString(6, setting.getOutBigEndianStr());
+			
+			st.setFloat(7, setting.getInSampleRate());
+			st.setInt(8, setting.getInBitSize());
+			st.setInt(9, setting.getInChannels());
+			st.setString(10, setting.getInSignedStr());
+			st.setString(11, setting.getInBigEndianStr());
+			
+			st.setInt(12, setting.getId());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			String trace = String.format("Error trying to execute DELETE statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
@@ -121,7 +146,21 @@ public class AudioSettingsRepository {
 	public void update(AudioSettingsModel setting) {
 		try {
 			PreparedStatement st = con.prepareStatement(updateStmt);
+			st.setString(1, setting.getConfigName());
 			
+			st.setFloat(2, setting.getOutSampleRate());
+			st.setInt(3, setting.getOutBitSize());
+			st.setInt(4, setting.getOutChannels());
+			st.setString(5, setting.getOutSignedStr());
+			st.setString(6, setting.getOutBigEndianStr());
+			
+			st.setFloat(7, setting.getInSampleRate());
+			st.setInt(8, setting.getInBitSize());
+			st.setInt(9, setting.getInChannels());
+			st.setString(10, setting.getInSignedStr());
+			st.setString(11, setting.getInBigEndianStr());
+			
+			st.setInt(12, setting.getId());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			String trace = String.format("Error trying to execute UPDATE statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));

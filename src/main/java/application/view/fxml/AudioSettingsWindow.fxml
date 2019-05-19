@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefWidth="325.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AudioSettingsController">
+<BorderPane prefHeight="437.0" prefWidth="325.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AudioSettingsController">
    <center>
-      <VBox maxHeight="1000.0" prefWidth="733.0" BorderPane.alignment="TOP_CENTER">
+      <VBox maxHeight="1000.0" prefHeight="496.0" prefWidth="315.0" BorderPane.alignment="TOP_CENTER">
          <children>
             <Pane>
                <children>
@@ -128,16 +128,27 @@
                   </VBox>
                </children>
             </Pane>
-            <Separator>
-               <padding>
+            <Separator prefHeight="3.0" prefWidth="315.0">
+               <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding></Separator>
-            <HBox alignment="CENTER" prefHeight="46.0" prefWidth="251.0" spacing="20.0" VBox.vgrow="SOMETIMES">
+               </VBox.margin></Separator>
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="315.0" spacing="20.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#createConfig" text=" New  " />
+                  <Button mnemonicParsing="false" onAction="#editConfig" text=" Edit " />
+                  <Button mnemonicParsing="false" onAction="#deleteConfig" text="Delete" />
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
+            </Separator>
+            <HBox alignment="CENTER" prefHeight="24.0" prefWidth="315.0" spacing="20.0" VBox.vgrow="SOMETIMES">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
                <children>
-                  <Button mnemonicParsing="false" onAction="#createConfig" text="Create New" />
                   <Button mnemonicParsing="false" onAction="#applyChanges" text="Aceptar" />
                   <Button mnemonicParsing="false" onAction="#discardChanges" text="Cancelar" />
                </children>
