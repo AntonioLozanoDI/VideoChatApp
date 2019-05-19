@@ -47,12 +47,12 @@ public abstract class AbstractStreamingSenderService extends Service {
 	}
 	
 	public final void startSender() {
-		clientConnected =false;
 		acceptConnection();
 		try {
 			if(!isAlive()) {
 				start();
 			}
+			resumeService();
 		} catch (Exception e) {
 			System.out.println(LoggingUtils.getStackTrace(e));
 		}
@@ -71,6 +71,8 @@ public abstract class AbstractStreamingSenderService extends Service {
 				System.out.println(" desde el puerto remoto: " + peticion.getPort());
 				
 				clientConnected = true;
+				peticion = new DatagramPacket(bufer, bufer.length,peticion.getAddress(),peticion.getPort());
+				socketUDP.send(peticion);
 			} catch (SocketException e) {
 				System.out.println("Socket: " + e.getMessage());
 			} catch (IOException e) {
@@ -96,7 +98,13 @@ public abstract class AbstractStreamingSenderService extends Service {
 	}
 	
 	@Override
+	public void status() {
+		System.out.println(String.format("%s - data is null %s, clientconnected %s, isStopped %s", getClass().getSimpleName(),data==null,clientConnected,isStopped()));
+	}
+	
+	@Override
 	protected void onStopedService() {
 		clientConnected =false;
+		data = null;
 	}
 }

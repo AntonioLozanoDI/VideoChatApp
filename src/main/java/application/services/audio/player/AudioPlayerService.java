@@ -45,10 +45,7 @@ public class AudioPlayerService extends AbstractPlayerService implements AudioHa
 	public void startPlayer() {
 		try {
 			sourceLine.start();
-			if(!isAlive()) {
-				start();
-			}
-			pause =false;
+			super.startPlayer();
 		} catch (Exception e) {}
 	}
 	

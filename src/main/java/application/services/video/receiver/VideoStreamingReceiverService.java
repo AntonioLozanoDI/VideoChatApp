@@ -10,7 +10,6 @@ public class VideoStreamingReceiverService extends AbstractStreamingReceiverServ
 
 	private VideoStreamingReceiverService() {
 		super();
-		data = new byte[23000];
 		port = 48560;
 	}
 
@@ -31,11 +30,4 @@ public class VideoStreamingReceiverService extends AbstractStreamingReceiverServ
 			}
 		}
 	}
-
-	@Override
-	protected void onStopedService() {
-		data = new byte[23000];
-		connected =false;
-	}
-
 }

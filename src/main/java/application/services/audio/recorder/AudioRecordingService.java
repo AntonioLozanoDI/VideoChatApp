@@ -4,6 +4,7 @@ import javax.sound.sampled.TargetDataLine;
 
 import application.services.audio.AudioHandler;
 import application.services.base.AbstractRecordingService;
+import utils.logging.LoggingUtils;
 
 public class AudioRecordingService extends AbstractRecordingService implements AudioHandler.Recorder {
 
@@ -41,23 +42,39 @@ public class AudioRecordingService extends AbstractRecordingService implements A
 	}
 
 	@Override
-	public void startRecording() {
+	public void startRecorder() {//TODO remove traces
+		System.out.println(String.format("BEFORE: pause %s, isAlive %s, lineIsRunning %s", pause, isAlive(),targetLine.isRunning()));
 		try {
-			targetLine.start();
-			
-			if(!isAlive()) 
-				start();
 			pause = false;
-		} catch (Exception e) {}
+			targetLine.start();
+			super.startRecorder();
+		} catch (Exception e) {
+			System.err.println(LoggingUtils.getStackTrace(e));
+		}
+		System.out.println(String.format("AFTER: pause %s, isAlive %s, lineIsRunning %s", pause, isAlive(),targetLine.isRunning()));
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println(String.format("AFTER-2: pause %s, isAlive %s, lineIsRunning %s", pause, isAlive(),targetLine.isRunning()));
+			}
+		}).start();
 	}
 
 	@Override
-	public void stopRecording() {
-		pause = false;
+	public void stopRecorder() {
+		pause = true;
+		targetLine.stop();
 	}
 
 	@Override
 	protected void onStopedService() {
-		targetLine.stop();
+		stopRecorder();
 	}
 }

@@ -53,17 +53,28 @@ public abstract class AbstractStreamingReceiverService extends Service {
 		byte[] buff = new byte[1024];
 		DatagramPacket peticion = new DatagramPacket(buff, buff.length,server,port);
 		socketUDP.send(peticion);
-		connected = true;
-		System.out.println(getClass().getSimpleName() + " connected to " + server.getHostAddress() + ":" + port);
+		new Thread(() ->  {
+			String trace = null;
+			try {
+				socketUDP.receive(peticion);
+				connected = true;
+				trace = getClass().getSimpleName() + " connected to " + server.getHostAddress() + ":" + port;
+			} catch (IOException e) {
+				trace = LoggingUtils.getStackTrace(e);
+			}
+			System.out.println(trace);
+		}).start();
+		
 	}
 
 	public byte[] getData() {
-		return data;
+		return data == null ? new byte[23000] : data;
 	}
 	
-	public void startReceiving() {
+	public void startReceiver() {
 		try {
 			sendPetition();
+			resumeService();
 			if(!isAlive()) {
 				start();
 			}
@@ -75,9 +86,17 @@ public abstract class AbstractStreamingReceiverService extends Service {
 	
 	@Override
 	protected void onStopedService() {
-		server = null;
-		socketUDP.close();
+		if(socketUDP != null)
+			socketUDP.close();
+		
+		data = null;
 		socketUDP = null;
 		connected = false;
 	}
+	
+	@Override
+	public void status() {
+		System.out.println(String.format("%s - data is null %s, connected %s, isStopped %s", getClass().getSimpleName(), data==null, connected, isStopped() ));
+	}
+	
 }

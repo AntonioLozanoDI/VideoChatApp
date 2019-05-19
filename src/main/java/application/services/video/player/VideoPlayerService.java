@@ -1,6 +1,5 @@
 package application.services.video.player;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
@@ -55,8 +54,7 @@ public class VideoPlayerService extends AbstractPlayerService {
 				if (Arrays.equals(image, empty))
 					throw new Exception();
 
-				BufferedImage im = ImageIO.read(new ByteArrayInputStream(image));
-				paintImage(SwingFXUtils.toFXImage(im, null));
+				paintImage(SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream(image)), null));
 			} catch (Exception e) {
 				paintImage(black);
 			}
@@ -70,16 +68,6 @@ public class VideoPlayerService extends AbstractPlayerService {
 		view.setPreserveRatio(false);
 		view.setFitHeight(height);
 		view.setFitWidth(width);
-	}
-
-	@Override
-	public void startPlayer() {
-		try {
-			if(!isAlive()) {
-				start();
-			}
-			pause =false;
-		} catch (Exception e) {}
 	}
 
 	@Override
