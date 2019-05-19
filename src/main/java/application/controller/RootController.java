@@ -54,7 +54,7 @@ public class RootController {
 	@FXML
 	private void closeApplication() {
 		Service.stopServices();
-		Platform.exit();
+		System.exit(0);
 	}
 	
 	@FXML

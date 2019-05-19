@@ -41,7 +41,7 @@ public class VideoChatAppView extends ApplicationView {
 		URL resource = null;
 		try {
 			rootLoader = new FXMLLoader();
-			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.rootLayout).toURL();
+			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.RootLayout).toURL();
 			rootLoader.setLocation(resource);
 			rootPane = rootLoader.load();
 			rootController = rootLoader.getController();
@@ -58,7 +58,7 @@ public class VideoChatAppView extends ApplicationView {
 		URL resource = null;
 		try {
 			mainLoader = new FXMLLoader();
-			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.mainView).toURL();
+			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.MainView).toURL();
 			mainLoader.setLocation(resource);
 			mainPane = mainLoader.load();
 			mainController = mainLoader.getController();

@@ -28,7 +28,7 @@ public class ServerSettingsWindow extends ApplicationModal {
 		try {
 			// Load the fxml file and create a new stage for the popup dialog.
 			FXMLLoader loader = new FXMLLoader();
-			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.serverSettingsWindow).toURL();
+			resource = ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.ServerSettingsWindow).toURL();
 			loader.setLocation(resource);
 			BorderPane page = loader.load();
 

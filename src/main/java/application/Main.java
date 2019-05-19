@@ -2,8 +2,6 @@ package application;
 
 import application.view.ApplicationView;
 import application.view.VideoChatAppView;
-import application.view.modal.ApplicationModal;
-import application.view.modal.LoginWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import utils.database.DatabaseHelper;

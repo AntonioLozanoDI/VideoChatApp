@@ -11,10 +11,14 @@ import application.view.component.ContactCard;
 import application.view.component.CreateContactCard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -53,11 +57,15 @@ public class MainController {
 		camIcon.setFitWidth(80);
 		setFirstContactCard();
 		setupContacts();
+		
+		listView.setOnMouseClicked( (event) -> {		
+			if(event.getButton().equals(MouseButton.SECONDARY))
+				listView.getSelectionModel().clearSelection();	
+		});
 	}
 
-	private void setFirstContactCard() {
-//		CreateContactCard createCard = CreateContactCard.create();		
-		
+	private void setFirstContactCard() {		
+		contactCards.add(CreateContactCard.create());
 	}
 	
 	private void setupContacts() {
@@ -73,7 +81,7 @@ public class MainController {
 		if(videoScreen == null) {
 			try {
 				FXMLLoader screenLoader = new FXMLLoader();
-				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.videoScreenView).toURL());
+				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
 				videoScreen = screenLoader.load();
 				videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
 				videoScreen.prefWidthProperty().bind(rightPane.widthProperty());

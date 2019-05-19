@@ -54,7 +54,6 @@ public class VideoStreamingController {
 	
 	@FXML
 	private void initialize() {
-		System.out.println("initialized");
 		setupGlassPane();
 		
 		micButton.setGraphic(micView);
