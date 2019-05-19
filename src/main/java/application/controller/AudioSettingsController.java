@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sound.midi.ControllerEventListener;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -79,14 +78,14 @@ public class AudioSettingsController {
 	private AudioSettingsModel defaultSettings;
 
 	private AudioSettingsModel lastSelectedSetting;
-	
+
 	private boolean dataUnsync;
 
 	private Stage stage;
 
 	private Info captureDevice;
-	
-	private ConfiguredLines lines;	
+
+	private ConfiguredLines lines;
 
 	@FXML
 	private void initialize() {
@@ -107,7 +106,7 @@ public class AudioSettingsController {
 				};
 			}
 		});
-		
+
 		comboSettings.setCellFactory(new Callback<ListView<AudioSettingsModel>, ListCell<AudioSettingsModel>>() {
 			@Override
 			public ListCell<AudioSettingsModel> call(ListView<AudioSettingsModel> param) {
@@ -139,11 +138,10 @@ public class AudioSettingsController {
 					setData(newValue);
 				}
 			} else {
-				//TODO showdialog
+				// TODO showdialog
 			}
 		});
 
-		
 		audioPlayer = AudioPlayerService.getInstance();
 		audioRecorder = AudioRecordingService.getInstance();
 		settingsDAO = AudioSettingsDAO.getInstance();
@@ -153,7 +151,7 @@ public class AudioSettingsController {
 	}
 
 	private void loadFromData() {
-		try {//TODO remove try catch
+		try {// TODO remove try catch
 			if (settingsDAO.hasConfiguredData()) {
 				List<AudioSettingsModel> data = settingsDAO.findAll();
 				defaultSettings = settingsDAO.getDefault();
@@ -185,11 +183,13 @@ public class AudioSettingsController {
 		} else {
 			comboSettings.getSelectionModel().clearSelection();
 		}
+		
+		
 	}
 
 	private void setData(AudioSettingsModel setting) {
 		lastSelectedSetting = setting;
-		
+
 		configLabel.setText(setting.getConfigName());
 
 		inSampleRate.setText(Float.toString(setting.getInSampleRate()));
@@ -203,31 +203,32 @@ public class AudioSettingsController {
 		outChannels.setText(String.valueOf(setting.getOutChannels()));
 		outSigned.setSelected(setting.getOutSigned().booleanValue());
 		outBigEndian.setSelected(setting.getOutBigEndian().booleanValue());
-		
+
 		setCaptureDevice(setting);
+
+		dataUnsync = false;
 	}
 
 	private void setCaptureDevice(AudioSettingsModel setting) {
 		Optional<Info> device = info.stream().filter(cd -> setting.getCaptureDevice().equals(cd.getName())).findFirst();
-		if(device.isPresent())
+		if (device.isPresent())
 			inMixers.getSelectionModel().select(device.get());
 	}
 
 	@FXML
 	private void applyChanges() {
-		if(dataUnsync) {
-			 Optional<ButtonType> btn = DialogBuilder
-					 .confirmation()
-					 .header(String.format("¿Desea guardar los cambios realizados en la configuracion de audio? %n\t- (%s)", lastSelectedSetting.getConfigName()))
-					 .finish()
-					 .alert()
-					 .showAndWait();
-			 
-			 if(btn.isPresent() && btn.get().equals(ButtonType.OK)) {
-				 dataUnsync = false;
-			 }
+		if (dataUnsync) {
+			Optional<ButtonType> btn = DialogBuilder.confirmation()
+					.header(String.format(
+							"¿Desea guardar los cambios realizados en la configuracion de audio? %n\t- (%s)",
+							lastSelectedSetting.getConfigName()))
+					.finish().alert().showAndWait();
+
+			if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
+				dataUnsync = false;
+			}
 		}
-		if(isAudioDataConfigured() && !dataUnsync) {
+		if (isAudioDataConfigured() && !dataUnsync) {
 			audioPlayer.setSourceLine(lines.source);
 			audioRecorder.setTargetLine(lines.target);
 			stage.close();
@@ -244,12 +245,12 @@ public class AudioSettingsController {
 		EnterNameWindow configNameWindow = ApplicationModal.build(EnterNameWindow.class, stage);
 		configNameWindow.showView();
 		EnterNameController controller = configNameWindow.getController();
-		if(controller.getName().isPresent()) {
+		if (controller.getName().isPresent()) {
 			String configName = controller.getName().get();
-			
+
 			AudioSettingsModel newSetting = retrieveDataFromForm(null);
 			newSetting.setConfigName(configName);
-			
+
 			settingsDAO.saveAudioSetting(newSetting);
 			settings.add(newSetting);
 			comboSettings.getSelectionModel().select(newSetting);
@@ -259,15 +260,15 @@ public class AudioSettingsController {
 	}
 
 	@FXML
-	private void editConfig() {//TODO
+	private void editConfig() {// TODO
 		settingsDAO.updateAudioSetting(retrieveDataFromForm(lastSelectedSetting));
 		dataUnsync = false;
 	}
-	
+
 	private AudioSettingsModel retrieveDataFromForm(AudioSettingsModel model) {
-		if(model == null) 
+		if (model == null)
 			model = new AudioSettingsModel();
-		
+
 		float sampleRateIn = Float.parseFloat(inSampleRate.textProperty().get());
 		int bitSizeIn = Integer.parseInt(inBitSize.textProperty().get());
 		int channelsIn = Integer.parseInt(inChannels.textProperty().get());
@@ -279,7 +280,7 @@ public class AudioSettingsController {
 		int channelsOut = Integer.parseInt(outChannels.textProperty().get());
 		boolean signedOut = outSigned.isSelected();
 		boolean bigEndianOut = outBigEndian.isSelected();
-		
+
 		model.setInSampleRate(sampleRateIn);
 		model.setInBitSize(bitSizeIn);
 		model.setInChannels(channelsIn);
@@ -293,17 +294,17 @@ public class AudioSettingsController {
 		model.setOutBigEndian(bigEndianOut);
 		System.out.println("null?" + captureDevice);
 		model.setCaptureDevice(captureDevice == null ? "" : captureDevice.getName());
-		
+
 		return model;
 	}
-	
+
 	@FXML
-	private void deleteConfig() {//TODO
+	private void deleteConfig() {// TODO
 		settingsDAO.deleteAudioSetting(lastSelectedSetting);
 		clearData();
 		dataUnsync = false;
 	}
-	
+
 	private void configureAudioData() {
 		try {
 			lines = new ConfiguredLines();
@@ -313,10 +314,10 @@ public class AudioSettingsController {
 			System.out.println(LoggingUtils.getStackTrace(e));
 		}
 	}
-	
+
 	public boolean isAudioDataConfigured() {
-		System.out.println(captureDevice != null && lines != null &&lines.source != null && lines.target != null);
-		return captureDevice != null && lines != null &&lines.source != null && lines.target != null;
+		System.out.println(captureDevice != null && lines != null && lines.source != null && lines.target != null);
+		return captureDevice != null && lines != null && lines.source != null && lines.target != null;
 	}
 
 	private void setTarget() throws LineUnavailableException {
@@ -357,7 +358,7 @@ public class AudioSettingsController {
 	private void setupChangesDetection() {
 
 		inMixers.getSelectionModel().selectedItemProperty().addListener(listener());
-		
+
 		TextField[] tfs = { inBitSize, inChannels, inSampleRate, outBitSize, outChannels, outSampleRate };
 		for (TextField tf : tfs) {
 			tf.textProperty().addListener(listener());
@@ -368,11 +369,11 @@ public class AudioSettingsController {
 			cb.selectedProperty().addListener(listener());
 		}
 	}
-	
+
 	private void clearData() {
 
 		inMixers.getSelectionModel().clearSelection();
-		
+
 		TextField[] tfs = { inBitSize, inChannels, inSampleRate, outBitSize, outChannels, outSampleRate };
 		for (TextField tf : tfs) {
 			tf.clear();
@@ -397,7 +398,7 @@ public class AudioSettingsController {
 	public boolean areServicesRunning() {
 		return audioPlayer.isRunning() || audioRecorder.isRunning();
 	}
-	
+
 	class ConfiguredLines {
 		SourceDataLine source;
 		TargetDataLine target;

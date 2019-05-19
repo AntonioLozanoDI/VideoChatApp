@@ -1,5 +1,6 @@
 package application.model.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ public class AudioSettingsDAO {
 	private Map<Integer, AudioSettingsModel> settingsMap;
 
 	private Map<Integer, String> devicesMap;
+	
+	private List<AudioSettingsModel> audioData;
 
 	private DefaultAudioSettingsRepository defaultSettingsRepository;
 
@@ -28,6 +31,7 @@ public class AudioSettingsDAO {
 		super();
 		settingsMap = new HashMap<>();
 		devicesMap = new HashMap<>();
+		audioData = new ArrayList<>();
 		defaultSettingsRepository = new DefaultAudioSettingsRepository();
 		settingsRepository = new AudioSettingsRepository();
 		captureDeviceRepository = new AudioCaptureDeviceRepository();
@@ -36,16 +40,23 @@ public class AudioSettingsDAO {
 
 	private void mapData() {
 		settingsMap.clear();
+		devicesMap.clear();
 
+		List<CaptureDeviceModel> devices = captureDeviceRepository.findAll();
+		for (CaptureDeviceModel device : devices) {
+			devicesMap.put(device.getConfigId(), device.getDeviceName());
+		}
+		
 		List<AudioSettingsModel> data = settingsRepository.findAll();
 		for (AudioSettingsModel audioSetting : data) {
+			String device = devicesMap.get(audioSetting.getId());
+			if(device != null && !device.isEmpty()) {
+				audioSetting.setCaptureDevice(device);
+			}
 			settingsMap.put(audioSetting.getId(), audioSetting);
+			audioData.add(audioSetting);
 		}
 
-//		List<CaptureDeviceModel> devices = captureDeviceRepository.findAll();
-//		for (CaptureDeviceModel device : devices) {
-//			devicesMap.put(device.getConfigId(), device.getDeviceName());
-//		}
 	}
 
 	public static AudioSettingsDAO getInstance() {
@@ -108,6 +119,6 @@ public class AudioSettingsDAO {
 	}
 
 	public List<AudioSettingsModel> findAll() {
-		return settingsRepository.findAll();
+		return audioData;
 	}
 }
