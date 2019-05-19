@@ -25,10 +25,12 @@ public class SQLiteConnectionManager extends DatabaseConnectionManager {
 	
 	@Override
 	public Connection getConnection() {
-		try {
-			con = DriverManager.getConnection(connectorProtocol + dbLocation);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(con == null) {
+			try {
+				con = DriverManager.getConnection(connectorProtocol + dbLocation);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return con;
 	}

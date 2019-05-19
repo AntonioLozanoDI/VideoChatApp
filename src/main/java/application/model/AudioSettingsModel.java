@@ -258,7 +258,7 @@ public class AudioSettingsModel {
 
 	public static AudioSettingsModel fromValues(String configName, float sampleRateIn, int bitSizeIn, int channelsIn,
 			boolean signedIn, boolean bigEndianIn, float sampleRateOut, int bitSizeOut, int channelsOut,
-			boolean signedOut, boolean bigEndianOut) {
+			boolean signedOut, boolean bigEndianOut, String captureDeviceStr) {
 
 		AudioSettingsModel setting = new AudioSettingsModel();
 		setting.setConfigName(configName);
@@ -275,6 +275,8 @@ public class AudioSettingsModel {
 		setting.setOutSigned(signedOut);
 		setting.setOutBigEndian(bigEndianOut);
 
+		setting.setCaptureDevice(captureDeviceStr);
+		
 		return setting;
 	}
 	

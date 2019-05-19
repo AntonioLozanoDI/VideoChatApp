@@ -19,7 +19,7 @@ public class DatabaseConnectionManager {
 
 	protected Properties properties;
 	protected Reader propertiesReader;
-	protected Connection con;
+	protected  static Connection con;
 
 	public DatabaseConnectionManager(String propertiesFilePath) throws IOException {
 		properties = new Properties();

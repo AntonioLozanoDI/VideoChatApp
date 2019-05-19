@@ -2,6 +2,11 @@ package application.model.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,13 +21,13 @@ public class AudioCaptureDeviceRepository {
 
 	private Logger logger = ApplicationLoggers.modelLogger;
 
-	private final String insertStmt = "INSERT INTO AudioCaptureDevice (config_name,out_sample_rate,out_sample_size_bits,out_channels,out_signed,out_big_endian,in_sample_rate,in_sample_size_bits,in_channels,in_signed,in_big_endian) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+	private final String insertStmt = "INSERT INTO AudioCaptureDevice (device_name,config_id) VALUES (?,?);";
 
-	private final String deleteStmt = "DELETE FROM AudioCaptureDevice WHERE config_name = ? AND out_sample_rate = ? AND out_sample_size_bits = ? AND out_channels = ? AND out_signed = ? AND out_big_endian = ? AND in_sample_rate = ? AND in_sample_size_bits = ? AND in_channels = ? AND in_signed = ? AND in_big_endian = ? AND id = ?;";
+	private final String deleteStmt = "DELETE FROM AudioCaptureDevice WHERE config_id = ?;";
 
 	private final String selectAllStmt = "SELECT * FROM AudioCaptureDevice;";
 	
-	private final String updateStmt = "UPDATE AudioCaptureDevice SET config_name = ?, out_sample_rate = ?, out_sample_size_bits = ?, out_channels = ?, out_signed = ?, out_big_endian = ?, in_sample_rate = ?, in_sample_size_bits = ?, in_channels = ?, in_signed = ?, in_big_endian = ? WHERE id = ?;";
+	private final String updateStmt = "UPDATE AudioCaptureDevice SET device_name = ? WHERE config_id = ?;";
 
 	private Connection con = null;
 
@@ -42,24 +47,58 @@ public class AudioCaptureDeviceRepository {
 		}
 	}
 	
+	public List<CaptureDeviceModel> findAll() {
+		List<CaptureDeviceModel> devices = null;
+		try {
+			PreparedStatement st = con.prepareStatement(selectAllStmt);
+			ResultSet rs = st.executeQuery();
+			devices = new ArrayList<>();
+			while (rs.next()) {
+				CaptureDeviceModel device = new CaptureDeviceModel();
+				device.setDeviceName(rs.getString(1));
+				device.setConfigId(rs.getInt(2));
+				devices.add(device);
+			}
+		} catch (SQLException e) {
+			String trace = String.format("Error trying to execute SELECT statement into AudioCaptureDevice table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			logger.severe(trace);
+		}
+		return devices == null ? Collections.emptyList() : devices;
+	}
+	
 	public void insert(AudioSettingsModel model) {
-		// TODO Auto-generated method stub
-		
+		try {
+			PreparedStatement st = con.prepareStatement(insertStmt); 
+			st.setString(1, model.getCaptureDevice());
+			st.setInt(2, model.getId());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			String trace = String.format("Error trying to execute INSERT statement into AudioCaptureDevice table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			logger.severe(trace);
+		}
 	}
 
 	public void delete(AudioSettingsModel model) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public List<CaptureDeviceModel> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			PreparedStatement st = con.prepareStatement(deleteStmt);
+			st.setInt(1, model.getId());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			String trace = String.format("Error trying to execute DELETE statement into AudioCaptureDevice table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			logger.severe(trace);
+		}
 	}
 
 	public void update(AudioSettingsModel model) {
-		// TODO Auto-generated method stub
-		
+		try {
+			PreparedStatement st = con.prepareStatement(updateStmt); 
+			st.setString(1, model.getCaptureDevice());
+			st.setInt(2, model.getId());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			String trace = String.format("Error trying to execute UPDATE statement into AudioCaptureDevice table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			logger.severe(trace);
+		}
 	}
 
 }

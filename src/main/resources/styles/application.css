@@ -51,7 +51,11 @@
 .contactCard{
 	-fx-background-color: seashell;
 	-fx-border-color: silver;
-	-fx-text-fill: red; 
+}
+
+.createContactCard{
+	-fx-background-color: white;
+	-fx-border-color: silver;
 }
 
 .contactLabel{

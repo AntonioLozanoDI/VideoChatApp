@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sp.dialogs.DialogBuilder;
-
 import application.model.AudioSettingsModel;
 import application.model.CaptureDeviceModel;
 import application.model.repository.AudioCaptureDeviceRepository;
@@ -44,10 +42,10 @@ public class AudioSettingsDAO {
 			settingsMap.put(audioSetting.getId(), audioSetting);
 		}
 
-		List<CaptureDeviceModel> devices = captureDeviceRepository.findAll();
-		for (CaptureDeviceModel device : devices) {
-			devicesMap.put(device.getConfigId(), device.getDeviceName());
-		}
+//		List<CaptureDeviceModel> devices = captureDeviceRepository.findAll();
+//		for (CaptureDeviceModel device : devices) {
+//			devicesMap.put(device.getConfigId(), device.getDeviceName());
+//		}
 	}
 
 	public static AudioSettingsDAO getInstance() {
@@ -91,7 +89,11 @@ public class AudioSettingsDAO {
 			if (!model.getCaptureDevice().isEmpty())
 				captureDeviceRepository.insert(model);
 		} else {
-			captureDeviceRepository.update(model);
+			if (!model.getCaptureDevice().isEmpty()) {
+				captureDeviceRepository.update(model);
+			} else {
+				captureDeviceRepository.delete(model);
+			}
 		}
 
 		mapData();

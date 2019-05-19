@@ -2,6 +2,7 @@ package application.model.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class AudioSettingsRepository {
 	
 	private Logger logger = ApplicationLoggers.modelLogger;
 
-	private final String insertStmt = "INSERT INTO AudioSettings (config_name,out_sample_rate,out_sample_size_bits,out_channels,out_signed,out_big_endian,in_sample_rate,in_sample_size_bits,in_channels,in_signed,in_big_endian) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+	private final String insertStmt = "INSERT INTO AudioSettings (config_name, out_sample_rate, out_sample_size_bits, out_channels, out_signed, out_big_endian, in_sample_rate, in_sample_size_bits, in_channels, in_signed, in_big_endian ) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
 	private final String deleteStmt = "DELETE FROM AudioSettings WHERE config_name = ? AND out_sample_rate = ? AND out_sample_size_bits = ? AND out_channels = ? AND out_signed = ? AND out_big_endian = ? AND in_sample_rate = ? AND in_sample_size_bits = ? AND in_channels = ? AND in_signed = ? AND in_big_endian = ? AND id = ?;";
 
@@ -113,11 +114,12 @@ public class AudioSettingsRepository {
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
+			
 			String trace = String.format("Error trying to execute INSERT statement into AudioSettings table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
 	}
-
+	
 	public void delete(AudioSettingsModel setting) {
 		try {
 			PreparedStatement st = con.prepareStatement(deleteStmt);

@@ -3,8 +3,8 @@ package application.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import javax.sound.midi.ControllerEventListener;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -20,6 +20,8 @@ import application.model.AudioSettingsModel;
 import application.model.dao.AudioSettingsDAO;
 import application.services.audio.player.AudioPlayerService;
 import application.services.audio.recorder.AudioRecordingService;
+import application.view.modal.ApplicationModal;
+import application.view.modal.EnterNameWindow;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -127,6 +129,7 @@ public class AudioSettingsController {
 		inMixers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
 				captureDevice = newValue;
+				configureAudioData();
 			}
 		});
 
@@ -136,7 +139,7 @@ public class AudioSettingsController {
 					setData(newValue);
 				}
 			} else {
-				// showdialog
+				//TODO showdialog
 			}
 		});
 
@@ -150,7 +153,7 @@ public class AudioSettingsController {
 	}
 
 	private void loadFromData() {
-		try {
+		try {//TODO remove try catch
 			if (settingsDAO.hasConfiguredData()) {
 				List<AudioSettingsModel> data = settingsDAO.findAll();
 				defaultSettings = settingsDAO.getDefault();
@@ -215,13 +218,13 @@ public class AudioSettingsController {
 		if(dataUnsync) {
 			 Optional<ButtonType> btn = DialogBuilder
 					 .confirmation()
-					 .header(String.format("¿Desea guardar los cambios realizados en la configuracion de audio %n\t-> (%s)?", lastSelectedSetting.getConfigName()))
+					 .header(String.format("¿Desea guardar los cambios realizados en la configuracion de audio? %n\t- (%s)", lastSelectedSetting.getConfigName()))
 					 .finish()
 					 .alert()
 					 .showAndWait();
 			 
 			 if(btn.isPresent() && btn.get().equals(ButtonType.OK)) {
-				 dataUnsync = saveChanges();
+				 dataUnsync = false;
 			 }
 		}
 		if(isAudioDataConfigured() && !dataUnsync) {
@@ -231,74 +234,67 @@ public class AudioSettingsController {
 		}
 	}
 
-	private boolean saveChanges() {
-		
-		
-		return false;
-	}
-
 	@FXML
 	private void discardChanges() {
 		stage.close();
 	}
 
 	@FXML
-	private void createConfig() {//TODO
-		if(isAudioDataConfigured()) {
-			int lastId = settingsDAO.getLastSettingId();
-			String configName = "AudioSetting - (" + (lastId) + ")";
-
-			float sampleRateIn = Float.parseFloat(inSampleRate.textProperty().get());
-			int bitSizeIn = Integer.parseInt(inBitSize.textProperty().get());
-			int channelsIn = Integer.parseInt(inChannels.textProperty().get());
-			boolean signedIn = inSigned.isSelected();
-			boolean bigEndianIn = inBigEndian.isSelected();
-
-			float sampleRateOut = Float.parseFloat(outSampleRate.textProperty().get());
-			int bitSizeOut = Integer.parseInt(outBitSize.textProperty().get());
-			int channelsOut = Integer.parseInt(outChannels.textProperty().get());
-			boolean signedOut = outSigned.isSelected();
-			boolean bigEndianOut = outBigEndian.isSelected();
-
-			AudioSettingsModel newSetting = AudioSettingsModel.fromValues(configName, sampleRateIn, bitSizeIn, channelsIn, signedIn, bigEndianIn, sampleRateOut, bitSizeOut, channelsOut, signedOut, bigEndianOut);
+	private void createConfig() {
+		EnterNameWindow configNameWindow = ApplicationModal.build(EnterNameWindow.class, stage);
+		configNameWindow.showView();
+		EnterNameController controller = configNameWindow.getController();
+		if(controller.getName().isPresent()) {
+			String configName = controller.getName().get();
+			
+			AudioSettingsModel newSetting = retrieveDataFromForm(null);
+			newSetting.setConfigName(configName);
+			
 			settingsDAO.saveAudioSetting(newSetting);
 			settings.add(newSetting);
 			comboSettings.getSelectionModel().select(newSetting);
+			setData(newSetting);
+			dataUnsync = false;
 		}
 	}
 
 	@FXML
 	private void editConfig() {//TODO
-		if(isAudioDataConfigured() && lastSelectedSetting.getId() != 0) {
-			float sampleRateIn = Float.parseFloat(inSampleRate.textProperty().get());
-			int bitSizeIn = Integer.parseInt(inBitSize.textProperty().get());
-			int channelsIn = Integer.parseInt(inChannels.textProperty().get());
-			boolean signedIn = inSigned.isSelected();
-			boolean bigEndianIn = inBigEndian.isSelected();
-
-			float sampleRateOut = Float.parseFloat(outSampleRate.textProperty().get());
-			int bitSizeOut = Integer.parseInt(outBitSize.textProperty().get());
-			int channelsOut = Integer.parseInt(outChannels.textProperty().get());
-			boolean signedOut = outSigned.isSelected();
-			boolean bigEndianOut = outBigEndian.isSelected();
-			
-			lastSelectedSetting.setInSampleRate(sampleRateIn);
-			lastSelectedSetting.setInBitSize(bitSizeIn);
-			lastSelectedSetting.setInChannels(channelsIn);
-			lastSelectedSetting.setInSigned(signedIn);
-			lastSelectedSetting.setInBigEndian(bigEndianIn);
-
-			lastSelectedSetting.setOutSampleRate(sampleRateOut);
-			lastSelectedSetting.setOutBitSize(bitSizeOut);
-			lastSelectedSetting.setOutChannels(channelsOut);
-			lastSelectedSetting.setOutSigned(signedOut);
-			lastSelectedSetting.setOutBigEndian(bigEndianOut);
-			
-			lastSelectedSetting.setCaptureDevice(captureDevice == null ? "" : captureDevice.getName());
-			
-			settingsDAO.updateAudioSetting(lastSelectedSetting);
-		}
+		settingsDAO.updateAudioSetting(retrieveDataFromForm(lastSelectedSetting));
 		dataUnsync = false;
+	}
+	
+	private AudioSettingsModel retrieveDataFromForm(AudioSettingsModel model) {
+		if(model == null) 
+			model = new AudioSettingsModel();
+		
+		float sampleRateIn = Float.parseFloat(inSampleRate.textProperty().get());
+		int bitSizeIn = Integer.parseInt(inBitSize.textProperty().get());
+		int channelsIn = Integer.parseInt(inChannels.textProperty().get());
+		boolean signedIn = inSigned.isSelected();
+		boolean bigEndianIn = inBigEndian.isSelected();
+
+		float sampleRateOut = Float.parseFloat(outSampleRate.textProperty().get());
+		int bitSizeOut = Integer.parseInt(outBitSize.textProperty().get());
+		int channelsOut = Integer.parseInt(outChannels.textProperty().get());
+		boolean signedOut = outSigned.isSelected();
+		boolean bigEndianOut = outBigEndian.isSelected();
+		
+		model.setInSampleRate(sampleRateIn);
+		model.setInBitSize(bitSizeIn);
+		model.setInChannels(channelsIn);
+		model.setInSigned(signedIn);
+		model.setInBigEndian(bigEndianIn);
+
+		model.setOutSampleRate(sampleRateOut);
+		model.setOutBitSize(bitSizeOut);
+		model.setOutChannels(channelsOut);
+		model.setOutSigned(signedOut);
+		model.setOutBigEndian(bigEndianOut);
+		System.out.println("null?" + captureDevice);
+		model.setCaptureDevice(captureDevice == null ? "" : captureDevice.getName());
+		
+		return model;
 	}
 	
 	@FXML
@@ -308,15 +304,19 @@ public class AudioSettingsController {
 		dataUnsync = false;
 	}
 	
-	public boolean isAudioDataConfigured() {
+	private void configureAudioData() {
 		try {
 			lines = new ConfiguredLines();
 			setSource();
 			setTarget();
 		} catch (Exception e) {
-			return false;//TODO logger
+			System.out.println(LoggingUtils.getStackTrace(e));
 		}
-		return captureDevice != null && lines.source != null && lines.target != null;
+	}
+	
+	public boolean isAudioDataConfigured() {
+		System.out.println(captureDevice != null && lines != null &&lines.source != null && lines.target != null);
+		return captureDevice != null && lines != null &&lines.source != null && lines.target != null;
 	}
 
 	private void setTarget() throws LineUnavailableException {
