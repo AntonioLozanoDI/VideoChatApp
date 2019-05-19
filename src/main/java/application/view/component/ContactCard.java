@@ -1,6 +1,7 @@
 package application.view.component;
 
-import application.controller.ContactCardController;
+import application.controller.fxml.ContactCardController;
+import application.controller.fxml.MainController.Callback;
 import application.model.ContactModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -13,7 +14,7 @@ public class ContactCard extends ContactListComponent<AnchorPane> {
 	
 	private ContactModel contactInfo;
 	
-	public static ContactCard fromContact(ContactModel contact) {
+	public static ContactCard fromContact(ContactModel contact, Callback callback) {
 		ContactCard cc = null;
 		try {
 			// Load the fxml file and load root pane.
@@ -24,7 +25,7 @@ public class ContactCard extends ContactListComponent<AnchorPane> {
 			// Set the data into the controller.
 			ContactCardController controller = loader.getController();
 			controller.setContactData(contact);
-			
+			controller.setCallback(callback);
 			// Create contact card.
 			cc = new ContactCard();
 			cc.contactInfo = contact;

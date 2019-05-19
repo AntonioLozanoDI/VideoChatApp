@@ -5,7 +5,7 @@ import java.net.URL;
 
 import com.sp.dialogs.DialogBuilder;
 
-import application.controller.AudioSettingsController;
+import application.controller.fxml.AudioSettingsController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;

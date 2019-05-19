@@ -4,8 +4,8 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Level;
 
-import application.controller.MainController;
-import application.controller.RootController;
+import application.controller.fxml.MainController;
+import application.controller.fxml.RootController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;

@@ -1,4 +1,4 @@
-package application.controller;
+package application.controller.fxml;
 
 import application.services.Service;
 import application.view.modal.ApplicationModal;

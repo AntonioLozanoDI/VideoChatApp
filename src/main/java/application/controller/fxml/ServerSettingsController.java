@@ -1,4 +1,4 @@
-package application.controller;
+package application.controller.fxml;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;

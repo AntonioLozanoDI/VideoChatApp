@@ -8,6 +8,8 @@ import javafx.beans.property.StringProperty;
 public class ContactModel {
 
 	private int id;
+	
+	private String userId;
 
 	private StringProperty fullNameProperty;
 
@@ -84,4 +86,11 @@ public class ContactModel {
 		segundoApellidoProperty.set(apellido2);
 	}
 
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }

@@ -1,9 +1,12 @@
-package application.controller;
+package application.controller.fxml;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.diproject.commons.model.Origin;
+import com.diproject.commons.model.Payload;
+import com.diproject.commons.model.message.types.Message;
+import com.diproject.commons.utils.Utils;
+import com.diproject.commons.utils.payload.PayloadFactory;
+import com.diproject.commons.utils.ws.PayloadHandler;
+import com.diproject.commons.utils.ws.WebSocketClient;
 
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
@@ -11,25 +14,26 @@ import application.view.component.ContactCard;
 import application.view.component.CreateContactCard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import utils.constants.Constants;
 import utils.logging.LoggingUtils;
 import utils.resources.ApplicationResourceProvider;
 
 public class MainController {
 
+	@FunctionalInterface
+	public interface Callback {
+		void call(ContactModel contact);
+	}
+	
 	@FXML
 	private VBox leftPaneVBox;
 	@FXML
@@ -42,12 +46,15 @@ public class MainController {
 	private ImageView camIcon;
 
 	private ObservableList<Pane> contactCards = FXCollections.<Pane>observableArrayList();
-	
+
 	private VideoStreamingController videoStreamingController;
-	
+
 	private ContactDAO contactDAO;
-	
+
 	private StackPane videoScreen;
+	
+	//private 
+	private Callback callback;
 
 	@FXML
 	private void initialize() {
@@ -55,35 +62,41 @@ public class MainController {
 		camIcon.setImage(ApplicationResourceProvider.getPNGFile(Constants.Files.Images.camIcon).toImage());
 		camIcon.setFitHeight(80);
 		camIcon.setFitWidth(80);
+		
+		contactDAO.setOnContactCreated((contact) -> addContact(contact));
+
+		callback = (contact) -> {
+			initCall(contact);
+		};
 		setFirstContactCard();
 		setupContacts();
 		
-		contactDAO.setOnContactCreated((contact) -> addContact(contact));
-		
-		listView.setOnMouseClicked( (event) -> {		
-			if(event.getButton().equals(MouseButton.SECONDARY))
-				listView.getSelectionModel().clearSelection();	
+		listView.setOnMouseClicked((event) -> {
+			if (event.getButton().equals(MouseButton.SECONDARY)) {
+				listView.getSelectionModel().clearSelection();
+			}
 		});
 	}
 	
 	private void addContact(ContactModel contactModel) {
-		contactCards.add(ContactCard.fromContact(contactModel).getParent());
+		contactCards.add(ContactCard.fromContact(contactModel,callback).getParent());
 	}
 
-	private void setFirstContactCard() {		
+	private void setFirstContactCard() {
 		contactCards.add(CreateContactCard.create());
 	}
-	
+
 	private void setupContacts() {
-		contactDAO.getAllContacts().stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc).getParent()));
+		contactDAO.getAllContacts().stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc,callback).getParent()));
 		listView.setItems(contactCards);
 	}
 
 	public void setupVideoScreen() {
-		if(videoScreen == null) {
+		if (videoScreen == null) {
 			try {
 				FXMLLoader screenLoader = new FXMLLoader();
-				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
+				screenLoader.setLocation(
+						ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
 				videoScreen = screenLoader.load();
 				videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
 				videoScreen.prefWidthProperty().bind(rightPane.widthProperty());
@@ -95,7 +108,36 @@ public class MainController {
 		}
 		rightPane.getChildren().add(videoScreen);
 	}
-	
+
+	private void initCall(ContactModel contact) {
+		//envio peticion
+		Message msg = new Message();
+		msg.setDestination("jose");
+		msg.setOrigin("Toni");
+		msg.setMessage("ole");
+		WebSocketClient wsc = new WebSocketClient("Toni", Origin.CHAT);
+		wsc.setPayloadHandler(new PayloadHandler() {
+			
+			@Override
+			public void setWebSocketClient(WebSocketClient webSocketClient) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void handlePayload(Payload payload) {
+				Message ex = PayloadFactory.extract(payload);
+				System.out.println(Utils.JSON.toJson(ex));
+			}
+		});
+		wsc.connect();
+		wsc.send(PayloadFactory.create(msg));
+		//espero peticion
+		
+		
+	}
+
+
 	public void hideVideoScreen() {
 		rightPane.getChildren().clear();
 	}

@@ -5,7 +5,7 @@ import java.net.URL;
 
 import com.sp.dialogs.DialogBuilder;
 
-import application.controller.ServerSettingsController;
+import application.controller.fxml.ServerSettingsController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;

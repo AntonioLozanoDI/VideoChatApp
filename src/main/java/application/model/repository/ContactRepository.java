@@ -93,7 +93,6 @@ public class ContactRepository {
 			String trace = String.format("Error trying to execute INSERT statement into Contact table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
 			logger.severe(trace);
 		}
-		System.out.println(contact);
 	}
 
 	public void delete(ContactModel contact) {

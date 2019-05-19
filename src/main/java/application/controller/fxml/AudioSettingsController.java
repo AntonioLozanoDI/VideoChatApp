@@ -1,4 +1,4 @@
-package application.controller;
+package application.controller.fxml;
 
 import java.util.ArrayList;
 import java.util.List;

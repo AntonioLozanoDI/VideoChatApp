@@ -38,7 +38,7 @@ public class ContactDAO {
 	}
 
 	public void saveContact(ContactModel contact) {
-		contactRepository.delete(contact);
+		contactRepository.insert(contact);
 		listenersCreate.forEach(listener -> listener.notifyObserver(contact));
 	}
 
@@ -48,7 +48,7 @@ public class ContactDAO {
 	}
 
 	public void removeContact(ContactModel contact) {
-		contactRepository.insert(contact);
+		contactRepository.delete(contact);
 		listenersDelete.forEach(listener -> listener.notifyObserver(contact));
 	}
 

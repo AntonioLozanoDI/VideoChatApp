@@ -5,7 +5,7 @@ import java.net.URL;
 
 import com.sp.dialogs.DialogBuilder;
 
-import application.controller.EnterNameController;
+import application.controller.fxml.EnterNameController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;

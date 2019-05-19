@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="60.0" prefWidth="355.0" styleClass="contactCard" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.ContactCardController">
+<AnchorPane fx:id="contactPane" prefHeight="60.0" prefWidth="355.0" styleClass="contactCard" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.ContactCardController">
    <children>
       <ImageView fx:id="contactIcon" fitHeight="40.0" fitWidth="40.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <Label fx:id="nameLabel" layoutX="105.0" layoutY="14.0" prefHeight="20.0" prefWidth="261.0" styleClass="contactLabel" text="Label" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="5.0">

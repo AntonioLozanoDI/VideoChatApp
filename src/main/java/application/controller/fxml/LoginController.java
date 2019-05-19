@@ -1,4 +1,4 @@
-package application.controller;
+package application.controller.fxml;
 
 import com.sp.fxutils.validation.FXUtils;
 

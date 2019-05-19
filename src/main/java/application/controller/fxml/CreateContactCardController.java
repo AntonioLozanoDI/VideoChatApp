@@ -1,4 +1,4 @@
-package application.controller;
+package application.controller.fxml;
 
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
@@ -39,7 +39,9 @@ public class CreateContactCardController {
 		contactForm.showView();
 		ContactFormController controller = contactForm.getController();
 		ContactModel contact = controller.getContact();
-		contactDAO.saveContact(contact);
+		if(contact != null) {
+			contactDAO.saveContact(contact);
+		}
 	}
 
 	public void setWindowStage(Stage formStage) {

@@ -1,6 +1,6 @@
 package application.view.component;
 
-import application.controller.CreateContactCardController;
+import application.controller.fxml.CreateContactCardController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import utils.constants.Constants;

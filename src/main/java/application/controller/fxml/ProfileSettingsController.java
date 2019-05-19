@@ -1,4 +1,4 @@
-package application.controller;
+package application.controller.fxml;
 
 public class ProfileSettingsController {
 
