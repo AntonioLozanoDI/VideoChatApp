@@ -34,14 +34,16 @@ public class Constants {
 			 * Solo indicar el nombre del fichero a partir del directorio
 			 * \application\view\fxml\
 			 */
-			public static final String rootLayout = "RootLayout";
-			public static final String mainView = "MainView";
-			public static final String videoScreenView = "VideoScreenView";
-			public static final String serverSettingsWindow = "ServerSettingsWindow";
-			public static final String contactCard = "ContactCard";
-			public static final String audioSettingsWindow = "AudioSettingsWindow";
+			public static final String RootLayout = "RootLayout";
+			public static final String MainView = "MainView";
+			public static final String VideoScreenView = "VideoScreenView";
+			public static final String ServerSettingsWindow = "ServerSettingsWindow";
+			public static final String ContactCard = "ContactCard";
+			public static final String AudioSettingsWindow = "AudioSettingsWindow";
 			public static final String LoginWindow = "LoginWindow";
 			public static final String RegisterUserWindow = "RegisterUserWindow";
+			public static final String CreateContactCard = "CreateContactCard";
+			public static final String EnterNameWindow = "EnterNameWindow";
 		}
 
 		public static class Properties {
@@ -79,6 +81,7 @@ public class Constants {
 			public static final String unmutedMic = "unmuted-mic";
 			public static final String mutedSpeaker = "muted-speaker";
 			public static final String unmutedSpeaker = "unmuted-speaker";
+			public static final String contactAdd = "contact-add";
 		}
 
 		public static class Logs {
