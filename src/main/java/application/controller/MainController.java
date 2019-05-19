@@ -58,10 +58,16 @@ public class MainController {
 		setFirstContactCard();
 		setupContacts();
 		
+		contactDAO.setOnContactCreated((contact) -> addContact(contact));
+		
 		listView.setOnMouseClicked( (event) -> {		
 			if(event.getButton().equals(MouseButton.SECONDARY))
 				listView.getSelectionModel().clearSelection();	
 		});
+	}
+	
+	private void addContact(ContactModel contactModel) {
+		contactCards.add(ContactCard.fromContact(contactModel).getParent());
 	}
 
 	private void setFirstContactCard() {		
@@ -69,11 +75,7 @@ public class MainController {
 	}
 	
 	private void setupContacts() {
-		contactDAO.getAllContacts();
-		List<ContactCard> demo = contactDAO.getAllContacts().stream().map(ContactCard::fromContact).collect(Collectors.toList());
-		for(ContactCard cc : demo)
-			contactCards.add(cc.getParent());
-		
+		contactDAO.getAllContacts().stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc).getParent()));
 		listView.setItems(contactCards);
 	}
 

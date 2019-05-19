@@ -20,10 +20,10 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="micButton" layoutX="688.0" layoutY="644.0" mnemonicParsing="false" onAction="#toggleMic" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.leftAnchor="630.0" />
-            <Button fx:id="speakerButton" layoutX="804.0" layoutY="645.0" mnemonicParsing="false" onAction="#toggleSpeaker" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.rightAnchor="630.0" />
-            <Button fx:id="pauseButton" layoutX="696.0" layoutY="644.0" mnemonicParsing="false" onAction="#pauseCall" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.leftAnchor="696.0" />
-            <Button fx:id="stopButton" layoutX="794.0" layoutY="644.0" mnemonicParsing="false" onAction="#stopCall" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.rightAnchor="690.0" />
+            <Button fx:id="micButton" layoutX="564.0" layoutY="644.0" mnemonicParsing="false" onAction="#toggleMic" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.leftAnchor="570.0" />
+            <Button fx:id="speakerButton" layoutX="884.0" layoutY="645.0" mnemonicParsing="false" onAction="#toggleSpeaker" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.rightAnchor="570.0" />
+            <Button fx:id="pauseButton" layoutX="660.0" layoutY="644.0" mnemonicParsing="false" onAction="#pauseCall" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.leftAnchor="660.0" />
+            <Button fx:id="stopButton" layoutX="793.0" layoutY="644.0" mnemonicParsing="false" onAction="#stopCall" style="-fx-background-color: darkgrey;" styleClass="roundedButton" AnchorPane.rightAnchor="660.0" />
          </children>
       </AnchorPane>
    </children>

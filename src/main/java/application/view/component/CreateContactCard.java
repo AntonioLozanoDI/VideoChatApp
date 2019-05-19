@@ -21,7 +21,7 @@ public class CreateContactCard extends ContactListComponent<AnchorPane> {
 			// Set the data into the controller.
 			CreateContactCardController controller = loader.getController();
 			
-			//ccc.data = data;
+//			ccc.data = data;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

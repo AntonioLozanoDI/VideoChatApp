@@ -8,14 +8,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="285.0" prefWidth="255.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="256.0" prefWidth="218.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.ContactFormController">
    <children>
-      <VBox layoutX="51.0" layoutY="38.0" prefHeight="188.0" prefWidth="153.0">
+      <VBox layoutX="33.0" layoutY="14.0" prefHeight="188.0" prefWidth="153.0">
          <children>
             <Pane prefWidth="129.0">
                <children>
-                  <TextField layoutX="2.0" layoutY="22.0" />
+                  <TextField fx:id="userIdTF" layoutX="2.0" layoutY="22.0" />
                   <Label layoutX="2.0" prefHeight="25.0" prefWidth="149.0" text="UserId">
                      <font>
                         <Font size="13.0" />
@@ -25,7 +24,7 @@
             </Pane>
             <Pane prefWidth="129.0">
                <children>
-                  <TextField layoutX="2.0" layoutY="22.0" />
+                  <TextField fx:id="nombreTF" layoutX="2.0" layoutY="22.0" />
                   <Label layoutX="2.0" prefHeight="25.0" prefWidth="149.0" text="Nombre">
                      <font>
                         <Font size="13.0" />
@@ -35,7 +34,7 @@
             </Pane>
             <Pane prefWidth="129.0">
                <children>
-                  <TextField layoutX="2.0" layoutY="22.0" />
+                  <TextField fx:id="apellido1TF" layoutX="2.0" layoutY="22.0" />
                   <Label layoutX="2.0" prefHeight="25.0" prefWidth="149.0" text="Primer apellido">
                      <font>
                         <Font size="13.0" />
@@ -45,7 +44,7 @@
             </Pane>
             <Pane prefWidth="129.0">
                <children>
-                  <TextField layoutX="2.0" layoutY="22.0" />
+                  <TextField fx:id="apellido2TF" layoutX="2.0" layoutY="22.0" />
                   <Label layoutX="2.0" prefHeight="25.0" prefWidth="149.0" text="Segundo apellido">
                      <font>
                         <Font size="13.0" />
@@ -55,6 +54,6 @@
             </Pane>
          </children>
       </VBox>
-      <Button layoutX="85.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="85.0" text="Aceptar" />
+      <Button layoutX="67.0" layoutY="217.0" mnemonicParsing="false" onAction="#createContact" prefHeight="25.0" prefWidth="85.0" text="Aceptar" />
    </children>
 </AnchorPane>

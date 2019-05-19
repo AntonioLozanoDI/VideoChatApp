@@ -35,7 +35,6 @@ public class LoginController {
 
 	@FXML
 	private void initialize() {
-		
 		registerLabel.setId(Styles.Login.registerLabelDefault);
 		loginWarning.setText("");
 		loginWarning.setId(Styles.Common.warningLabel);

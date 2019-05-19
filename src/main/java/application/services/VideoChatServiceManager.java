@@ -90,9 +90,12 @@ public class VideoChatServiceManager {
 			audioRecorder.pauseRecorder();
 			videoRecorder.pauseRecorder();
 		} else {
-			audioPlayer.resumePlayer();
+			if(activeSpeaker)
+				audioPlayer.resumePlayer();
+			
 			videoPlayer.resumePlayer();
-			audioRecorder.resumeRecorder();
+			if(activeMic)
+				audioRecorder.resumeRecorder();
 			videoRecorder.resumeRecorder();
 		}
 	}

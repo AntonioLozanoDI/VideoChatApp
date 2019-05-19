@@ -44,6 +44,7 @@ public class Constants {
 			public static final String RegisterUserWindow = "RegisterUserWindow";
 			public static final String CreateContactCard = "CreateContactCard";
 			public static final String EnterNameWindow = "EnterNameWindow";
+			public static final String ContactForm = "ContactForm";
 		}
 
 		public static class Properties {
