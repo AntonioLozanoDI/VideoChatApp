@@ -47,6 +47,8 @@ public class VideoChatServiceManager {
 		videoPlayer = VideoPlayerService.getInstance();
 		videoRecorder = VideoRecordingService.getInstance();
 
+		//===========================================================
+		
 		audioReceiver.addServiceTask(() -> {
 			audioPlayer.setData(audioReceiver.getData());
 		});
@@ -61,7 +63,27 @@ public class VideoChatServiceManager {
 
 		videoRecorder.addServiceTask(() -> {
 			videoSender.setImage(videoRecorder.getLastFrame());
-		});		
+		});	
+		
+		//===========================================================
+		
+		audioReceiver.addConnectionListener(() -> {
+			audioPlayer.startPlayer();
+		});
+		
+		audioSender.addConnectionListener(() -> {
+			audioRecorder.startRecorder();
+		});
+		
+		videoReceiver.addConnectionListener(() -> {
+			videoPlayer.startPlayer();
+		});
+		
+		videoSender.addConnectionListener(() -> {
+			videoRecorder.startRecorder();
+		});
+		
+		//===========================================================
 	}
 
 	public static void setupPlayer(ImageView view) {
@@ -72,23 +94,33 @@ public class VideoChatServiceManager {
 		audioSender.startSender();
 		videoSender.startSender();
 		
+		videoPlayer.setBlack();
+	}
+
+	public static void acceptCall() {
 		audioReceiver.startReceiver();
 		videoReceiver.startReceiver();
 	}
 	
-	public static void acceptCall() {
-		audioRecorder.startRecorder();
-		videoRecorder.startRecorder();
-
-		audioPlayer.startPlayer();
-		videoPlayer.startPlayer();
-	}
+//	public static void initCall() {
+//		audioSender.startSender();
+//		videoSender.startSender();
+//		
+//		audioRecorder.startRecorder();
+//		videoRecorder.startRecorder();
+//		
+//		audioReceiver.startReceiver();
+//		videoReceiver.startReceiver();
+//
+//		audioPlayer.startPlayer();
+//		videoPlayer.startPlayer();
+//	}
 
 	public static void pauseCall() {
 		pausedCall = !pausedCall;
 		if (pausedCall) {
-//			audioPlayer.pausePlayer();
-//			videoPlayer.pausePlayer();
+			audioPlayer.pausePlayer();
+			videoPlayer.pausePlayer();
 			audioRecorder.pauseRecorder();
 			videoRecorder.pauseRecorder();
 		} else {

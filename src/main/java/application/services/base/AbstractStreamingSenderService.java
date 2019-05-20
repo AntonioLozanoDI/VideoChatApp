@@ -4,17 +4,27 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import application.services.Service;
 import utils.logging.LoggingUtils;
 
 public abstract class AbstractStreamingSenderService extends Service {
+	
+	public interface ConnectionListener {
+		void onClientConnected();
+	}
 
+	private List<ConnectionListener> listeners = new ArrayList<>();
+	
 	protected int port;
 	protected boolean clientConnected = false;
 	protected DatagramSocket socketUDP = null;
 	protected DatagramPacket peticion = null;
 	protected byte[] data;
+	
 	
 	protected AbstractStreamingSenderService() {
 		super();
@@ -71,6 +81,9 @@ public abstract class AbstractStreamingSenderService extends Service {
 				System.out.println(" desde el puerto remoto: " + peticion.getPort());
 				
 				clientConnected = true;
+				
+				listeners.forEach(ConnectionListener::onClientConnected);
+				
 				peticion = new DatagramPacket(bufer, bufer.length,peticion.getAddress(),peticion.getPort());
 				socketUDP.send(peticion);
 			} catch (SocketException e) {
@@ -106,5 +119,9 @@ public abstract class AbstractStreamingSenderService extends Service {
 	protected void onStopedService() {
 		clientConnected =false;
 		data = null;
+	}
+
+	public void addConnectionListener(ConnectionListener l) {
+		listeners.add(Objects.requireNonNull(l));
 	}
 }

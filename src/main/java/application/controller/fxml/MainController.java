@@ -79,6 +79,7 @@ public class MainController {
 
 		callback = (contact) -> { 
 			selectedContact = contact; 
+			videoStreamingController.setSelectedContact(selectedContact.getUserId());
 			setupVideoScreen();
 		};
 		

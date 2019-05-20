@@ -2,9 +2,11 @@ package application.controller.fxml;
 
 import java.util.Optional;
 
+import com.diproject.commons.model.Origin;
 import com.diproject.commons.model.User;
 import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
 import com.diproject.commons.utils.rest.UserHTTPClient;
+import com.diproject.commons.utils.ws.WebSocketClient;
 import com.sp.dialogs.DialogBuilder;
 import com.sp.fxutils.validation.FXUtils;
 
@@ -73,12 +75,10 @@ public class LoginController {
 			try {
 				configClient.configureServer(serverField.getText());
 				userClient.login(user);
-				Optional<ProfileModel> prof = profileDAO.findUser(user.getLogin());
-				if(prof.isPresent()) {
-					sc.setLoggerUser(prof.get());
-					valid = true;
-					windowStage.close();
-				}
+				sc.setLoggerUser(user);
+				sc.setClient(new WebSocketClient(user.getLogin(), Origin.CHAT));
+				valid = true;
+				windowStage.close();
 			} catch (Exception e) {
 				DialogBuilder.warn().exceptionContent(e).alert().showAndWait();
 			}

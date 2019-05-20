@@ -1,26 +1,31 @@
 package application.controller.session;
 
-import application.model.ProfileModel;
+import com.diproject.commons.model.User;
+import com.diproject.commons.utils.ws.WebSocketClient;
+
+import application.controller.ws.VideoChatHandler;
 
 public class SessionController {
 
 	private static SessionController instance;
 	
-	private ProfileModel activeUser;
+	private User activeUser;
 	
 	private String serverAddress;
 	
 	private String selfClientAddress;
+	
+	private WebSocketClient wsc;
 
 	public static SessionController getInstance() {
 		return instance == null ? instance = new SessionController() : instance;
 	}
 
-	public void setLoggerUser(ProfileModel activeUser) {
+	public void setLoggerUser(User activeUser) {
 		this.activeUser = activeUser;
 	}
 	
-	public ProfileModel getLoggerUser() {
+	public User getLoggerUser() {
 		return activeUser;
 	}
 	
@@ -42,5 +47,15 @@ public class SessionController {
 
 	public void setSelfClientAddress(String selfClientAddress) {
 		this.selfClientAddress = selfClientAddress;
+	}
+	
+	public void setClient(WebSocketClient wsc) {
+		this.wsc = wsc;
+		wsc.setPayloadHandler(VideoChatHandler.getInstance());
+		wsc.connect();
+	}
+	
+	public WebSocketClient getClient() {
+		return wsc;
 	}
 }

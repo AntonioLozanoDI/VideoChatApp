@@ -74,4 +74,8 @@ public class VideoPlayerService extends AbstractPlayerService {
 	protected void onStopedService() {
 		paintImage(black);
 	}
+
+	public void setBlack() {
+		paintImage(black);
+	}
 }

@@ -6,6 +6,9 @@ import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import application.services.Service;
 import application.services.exception.ServiceNotConfiguredException;
@@ -13,6 +16,12 @@ import utils.logging.LoggingUtils;
 
 public abstract class AbstractStreamingReceiverService extends Service {
 
+	public interface ConnectionListener {
+		void onClientConnected();
+	}
+
+	private List<ConnectionListener> listeners = new ArrayList<>();
+	
 	protected byte[] data;
 	protected InetAddress server;
 	protected DatagramSocket socketUDP;
@@ -58,6 +67,8 @@ public abstract class AbstractStreamingReceiverService extends Service {
 			try {
 				socketUDP.receive(peticion);
 				connected = true;
+				
+				listeners.forEach(ConnectionListener::onClientConnected);
 				trace = getClass().getSimpleName() + " connected to " + server.getHostAddress() + ":" + port;
 			} catch (IOException e) {
 				trace = LoggingUtils.getStackTrace(e);
@@ -105,4 +116,8 @@ public abstract class AbstractStreamingReceiverService extends Service {
 		System.out.println(String.format("%s - data is null %s, connected %s, isStopped %s", getClass().getSimpleName(), data==null, connected, isStopped() ));
 	}
 	
+
+	public void addConnectionListener(ConnectionListener l) {
+		listeners.add(Objects.requireNonNull(l));
+	}
 }
