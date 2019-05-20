@@ -2,7 +2,6 @@ package application.controller.fxml;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +10,6 @@ import java.util.stream.Collectors;
 import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
 
 import application.controller.session.SessionController;
-import application.services.audio.receiver.AudioStreamingReceiverService;
-import application.services.video.receiver.VideoStreamingReceiverService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utils.constants.Styles;
 
@@ -51,10 +47,6 @@ public class ServerSettingsController {
 	private ToggleGroup radioGroup;
 
 	private Stage stage;
-	
-	private AudioStreamingReceiverService audioReceiver;
-	
-	private VideoStreamingReceiverService videoReceiver;
 	
 	private SessionController sc;
 	
@@ -86,8 +78,6 @@ public class ServerSettingsController {
 		clientRadio.setSelected(true);
 		
 		sc = SessionController.getInstance();
-		audioReceiver = AudioStreamingReceiverService.getInstance();
-		videoReceiver = VideoStreamingReceiverService.getInstance();
 		
 		configClient = new ConfigurationHTTPClient();
 		
@@ -125,9 +115,7 @@ public class ServerSettingsController {
 	private void configureRemoteServer() {
 		if(isValidIPAddress()) {
 			String serverAddress = ipAddressTF.textProperty().get();
-			//configClient.configureServer(serverAddress);
-			audioReceiver.setServerData(serverAddress);
-			videoReceiver.setServerData(serverAddress);
+			configClient.configureServer(serverAddress);
 			String addr = clientAdressesCombo.getSelectionModel().getSelectedItem();
 			if(addr != null && !addr.isEmpty()) {
 				sc.setSelfClientAddress(addr);

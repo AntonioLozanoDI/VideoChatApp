@@ -22,10 +22,6 @@ public class ContactCardController {
 	
 	private Callback callback;
 	
-	@FXML
-	private void initialize() {
-		
-	}
 	public void setContactData(ContactModel contact) {
 		this.contact = contact;
 		contact.fullNameProperty().addListener(
@@ -37,7 +33,7 @@ public class ContactCardController {
 	public void setCallback(Callback callback) {
 		this.callback = callback;
 		contactPane.setOnMouseClicked((event) -> {
-			callback.call(contact);
+			this.callback.call(contact);
 		});
 	}
 	
