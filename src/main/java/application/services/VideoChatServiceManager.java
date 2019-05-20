@@ -85,8 +85,8 @@ public class VideoChatServiceManager {
 	public static void pauseCall() {
 		pausedCall = !pausedCall;
 		if (pausedCall) {
-			audioPlayer.pausePlayer();
-			videoPlayer.pausePlayer();
+//			audioPlayer.pausePlayer();
+//			videoPlayer.pausePlayer();
 			audioRecorder.pauseRecorder();
 			videoRecorder.pauseRecorder();
 		} else {

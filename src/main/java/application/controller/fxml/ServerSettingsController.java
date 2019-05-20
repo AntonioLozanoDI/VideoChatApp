@@ -4,12 +4,18 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
+
+import application.controller.session.SessionController;
 import application.services.audio.receiver.AudioStreamingReceiverService;
 import application.services.video.receiver.VideoStreamingReceiverService;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -25,8 +31,6 @@ public class ServerSettingsController {
 	}
 
 	@FXML
-	private VBox netAddressesVBox;
-	@FXML
 	private TextField ipAddressTF;
 	@FXML
 	private RadioButton clientRadio;
@@ -36,6 +40,8 @@ public class ServerSettingsController {
 	private Label validationLabel;
 	@FXML
 	private Label serverAddressLabel;
+	@FXML
+	private ComboBox<String> clientAdressesCombo;
 	
 	private ConfiguredServer configured = ConfiguredServer.NONE;
 
@@ -46,6 +52,10 @@ public class ServerSettingsController {
 	private AudioStreamingReceiverService audioReceiver;
 	
 	private VideoStreamingReceiverService videoReceiver;
+	
+	private SessionController sc;
+	
+	private ConfigurationHTTPClient configClient;
 
 	@FXML
 	private void initialize() {
@@ -57,12 +67,30 @@ public class ServerSettingsController {
 		ipAddressTF.textProperty().addListener(
 				(observable, oldValue, newValue) -> {	refreshValidationLabel();  });
 		
+		List<String> addrs = Collections.emptyList();
+		try {
+			 addrs = netAdapterAddresses();
+		} catch (Exception e) {}
+		clientAdressesCombo.setItems(FXCollections.observableArrayList(addrs));
+		if(!addrs.isEmpty()) {
+			clientAdressesCombo.getSelectionModel().select(0);
+		}
 		
 		ipAddressTF.textProperty().set("192.168.1.133");
 //		ipAddressTF.textProperty().set("172.17.251.53");
 		
+
+		clientRadio.setSelected(true);
+		
+		sc = SessionController.getInstance();
 		audioReceiver = AudioStreamingReceiverService.getInstance();
 		videoReceiver = VideoStreamingReceiverService.getInstance();
+		
+		configClient = new ConfigurationHTTPClient();
+		
+		if(sc.isServerConfigured()) {
+			ipAddressTF.textProperty().set(sc.getServerAddress());
+		}
 	}
 	
 	private void refreshWindow() {
@@ -71,16 +99,16 @@ public class ServerSettingsController {
 		if (!recentlyConfigured.equals(configured)) {
 			switch (recentlyConfigured) {
 			case LOCAL:
-				addNetAddressesHints();
 				ipAddressTF.setDisable(true);
 				serverAddressLabel.setDisable(true);
 				validationLabel.setVisible(false);
+				clientAdressesCombo.setDisable(true);
 				break;
 			case REMOTE:
-				removeNetAddressesHints();
 				ipAddressTF.setDisable(false);
 				serverAddressLabel.setDisable(false);
 				validationLabel.setVisible(true);
+				clientAdressesCombo.setDisable(false);
 				break;
 			case NONE:
 			default:
@@ -92,6 +120,7 @@ public class ServerSettingsController {
 	private void configureRemoteServer() {
 		if(isValidIPAddress()) {
 			String serverAddress = ipAddressTF.textProperty().get();
+			//configClient.configureServer(serverAddress);
 			audioReceiver.setServerData(serverAddress);
 			videoReceiver.setServerData(serverAddress);
 			stage.close();
@@ -127,22 +156,6 @@ public class ServerSettingsController {
 		return Arrays.asList(Inet4Address.getAllByName(Inet4Address.getLocalHost().getHostName()))
 				.stream().filter(addr -> !addr.isLinkLocalAddress())
 				.map(addr -> addr.getHostAddress()).collect(Collectors.toList());
-	}
-	
-	private void addNetAddressesHints() {
-		try {
-			List<Label> labels = new ArrayList<>();
-			labels.add(new Label("Direcciones IP del adaptador de red:"));
-			List<String> addrs = netAdapterAddresses();
-			for (String addr : addrs) {
-				labels.add(new Label(String.format("\t%s", addr)));
-			}
-			netAddressesVBox.getChildren().addAll(labels);
-		} catch (UnknownHostException e) {}
-	}
-	
-	private void removeNetAddressesHints() {
-		netAddressesVBox.getChildren().clear();
 	}
 	
 	private boolean isValidIPAddress() {

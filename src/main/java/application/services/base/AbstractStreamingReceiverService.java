@@ -52,7 +52,7 @@ public abstract class AbstractStreamingReceiverService extends Service {
 		socketUDP = new DatagramSocket();
 		byte[] buff = new byte[1024];
 		DatagramPacket peticion = new DatagramPacket(buff, buff.length,server,port);
-		socketUDP.send(peticion);
+		
 		new Thread(() ->  {
 			String trace = null;
 			try {
@@ -65,6 +65,12 @@ public abstract class AbstractStreamingReceiverService extends Service {
 			System.out.println(trace);
 		}).start();
 		
+		while(!connected) {
+			socketUDP.send(peticion);
+			try {
+				Thread.sleep(2000);
+			} catch (Exception e2) {}
+		}
 	}
 
 	public byte[] getData() {

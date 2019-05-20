@@ -57,6 +57,10 @@ public class RegisterUserWindow extends ApplicationModal {
 		}
 	}
 	
+	public RegisterUserController getController() {
+		return controller;
+	}
+	
 	@Override
 	public void showView() {
 		formStage.showAndWait();

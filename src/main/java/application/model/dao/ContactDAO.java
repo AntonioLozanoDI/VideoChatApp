@@ -10,7 +10,7 @@ import application.model.repository.ContactRepository;
 public class ContactDAO {
 
 	public interface ContactDataChanged {
-		void notifyObserver(ContactModel contact);
+		void onChange(ContactModel contact);
 	}
 
 	private List<ContactDataChanged> listenersCreate;
@@ -39,28 +39,28 @@ public class ContactDAO {
 
 	public void saveContact(ContactModel contact) {
 		contactRepository.insert(contact);
-		listenersCreate.forEach(listener -> listener.notifyObserver(contact));
+		listenersCreate.forEach(listener -> listener.onChange(contact));
 	}
 
 	public void updateContact(ContactModel contact) {
 		contactRepository.update(contact);
-		listenersUpdate.forEach(listener -> listener.notifyObserver(contact));
+		listenersUpdate.forEach(listener -> listener.onChange(contact));
 	}
 
 	public void removeContact(ContactModel contact) {
 		contactRepository.delete(contact);
-		listenersDelete.forEach(listener -> listener.notifyObserver(contact));
+		listenersDelete.forEach(listener -> listener.onChange(contact));
 	}
 
-	public void setOnContactCreated(ContactDataChanged listener) {
+	public void addOnContactCreated(ContactDataChanged listener) {
 		listenersCreate.add(Objects.requireNonNull(listener));
 	}
 
-	public void setOnContactUpdated(ContactDataChanged listener) {
+	public void addOnContactUpdated(ContactDataChanged listener) {
 		listenersUpdate.add(Objects.requireNonNull(listener));
 	}
 
-	public void setOnContactDeleted(ContactDataChanged listener) {
+	public void addOnContactDeleted(ContactDataChanged listener) {
 		listenersDelete.add(Objects.requireNonNull(listener));
 	}
 }

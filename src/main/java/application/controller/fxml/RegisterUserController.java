@@ -1,7 +1,16 @@
 package application.controller.fxml;
 
+import java.util.Optional;
+
+import com.diproject.commons.model.User;
+import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
+import com.diproject.commons.utils.rest.UserHTTPClient;
+import com.sp.dialogs.DialogBuilder;
 import com.sp.fxutils.validation.FXUtils;
 
+import application.controller.session.SessionController;
+import application.model.ProfileModel;
+import application.model.dao.ProfileDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -11,7 +20,10 @@ import utils.constants.Styles;
 
 public class RegisterUserController {
 
-
+	public interface RegisterOperationListener {
+		void notifyListener();
+	}
+	
 	@FXML
 	private TextField nombreField;
 	@FXML
@@ -28,11 +40,27 @@ public class RegisterUserController {
 	private Label registerWarning;
 
 	private Stage windowStage;
+	
+	private UserHTTPClient userClient;
+	
+	private ConfigurationHTTPClient configClient;
+	
+	private ProfileDAO profileDAO;
+	
+	private SessionController sc;
+	
+	private RegisterOperationListener registerListener;
 
 	@FXML
 	private void initialize() {
 		registerWarning.setText("");
 		registerWarning.setId(Styles.Common.warningLabel);
+		
+		profileDAO = ProfileDAO.getInstance();
+		sc = SessionController.getInstance(); 
+		userClient = new UserHTTPClient();
+		configClient = new ConfigurationHTTPClient();
+		
 		loginField.textProperty().addListener(
 				(observable, oldValue, newValue) -> {	showWrongParams(checkTextFields());  });
 		nombreField.textProperty().addListener(
@@ -48,20 +76,31 @@ public class RegisterUserController {
 	}
 
 	@FXML
-	private void registerUser() {//TODO
+	private void registerUser() {
 		showFailedRegister(false);
 		boolean ok = false;
 		boolean validParams = checkTextFields();
 		if (validParams) {
-			String server = serverField.getText();
-
-			//ok = client.signup(user);
-			if(ok) {
-				
-				windowStage.close();
-			} else {
-				showFailedRegister(true);
+			User user = new User();
+			user.setUsername(String.format("%s %s %s", nombreField.getText(), apellido1Field.getText(), apellido2Field.getText()));
+			user.setLogin(loginField.getText());
+			user.setPassword(passwordField.getText());
+			try {
+				configClient.configureServer(serverField.getText());
+				userClient.signup(user);
+				profileDAO.saveProfile(user);
+				Optional<ProfileModel> prof = profileDAO.findUser(user.getLogin());
+				if(prof.isPresent()) {
+					sc.setLoggerUser(prof.get());
+					registerListener.notifyListener();
+					ok = true;
+				}
+			} catch (Exception e) {
+				DialogBuilder.warn().exceptionContent(e).alert().showAndWait();
 			}
+			
+			if(ok) 
+				windowStage.close();
 		} else {
 			showWrongParams(true);
 		}
@@ -90,5 +129,9 @@ public class RegisterUserController {
 
 	public void setWindowStage(Stage stage) {
 		this.windowStage = stage;
+	}
+
+	public void setOnSuccessfulRegister(RegisterOperationListener listener) {
+		registerListener = listener;
 	}
 }

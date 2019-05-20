@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="1000.0" prefWidth="1470.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.VideoStreamingController">
+<StackPane prefHeight="1000.0" prefWidth="1470.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.fxml.VideoStreamingController">
    <children>
       <AnchorPane fx:id="videoPane" onMouseMoved="#mouseMoved">
          <children>

@@ -138,7 +138,7 @@ public class AudioSettingsController {
 					setData(newValue);
 				}
 			} else {
-				// TODO showdialog
+				checkFormData();
 			}
 		});
 
@@ -183,8 +183,6 @@ public class AudioSettingsController {
 		} else {
 			comboSettings.getSelectionModel().clearSelection();
 		}
-		
-		
 	}
 
 	private void setData(AudioSettingsModel setting) {
@@ -217,6 +215,15 @@ public class AudioSettingsController {
 
 	@FXML
 	private void applyChanges() {
+		checkFormData();
+		if (isAudioDataConfigured() && !dataUnsync) {
+			audioPlayer.setSourceLine(lines.source);
+			audioRecorder.setTargetLine(lines.target);
+			stage.close();
+		}
+	}
+
+	private void checkFormData() {
 		if (dataUnsync) {
 			Optional<ButtonType> btn = DialogBuilder.confirmation()
 					.header(String.format(
@@ -225,13 +232,9 @@ public class AudioSettingsController {
 					.finish().alert().showAndWait();
 
 			if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
+				editConfig();
 				dataUnsync = false;
 			}
-		}
-		if (isAudioDataConfigured() && !dataUnsync) {
-			audioPlayer.setSourceLine(lines.source);
-			audioRecorder.setTargetLine(lines.target);
-			stage.close();
 		}
 	}
 
@@ -292,7 +295,7 @@ public class AudioSettingsController {
 		model.setOutChannels(channelsOut);
 		model.setOutSigned(signedOut);
 		model.setOutBigEndian(bigEndianOut);
-		System.out.println("null?" + captureDevice);
+
 		model.setCaptureDevice(captureDevice == null ? "" : captureDevice.getName());
 
 		return model;

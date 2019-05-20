@@ -8,6 +8,8 @@ import com.diproject.commons.utils.payload.PayloadFactory;
 import com.diproject.commons.utils.ws.PayloadHandler;
 import com.diproject.commons.utils.ws.WebSocketClient;
 
+import application.controller.session.SessionController;
+import application.controller.ws.VideoChatHandler;
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
 import application.view.component.ContactCard;
@@ -53,8 +55,15 @@ public class MainController {
 
 	private StackPane videoScreen;
 	
-	//private 
 	private Callback callback;
+	
+	private ContactModel selectedContact;
+	
+	private SessionController sc;
+	
+	private VideoChatHandler vch;
+	
+	private boolean alreadyAdded;
 
 	@FXML
 	private void initialize() {
@@ -63,17 +72,24 @@ public class MainController {
 		camIcon.setFitHeight(80);
 		camIcon.setFitWidth(80);
 		
-		contactDAO.setOnContactCreated((contact) -> addContact(contact));
+		sc = SessionController.getInstance();
+		vch = VideoChatHandler.getInstance();
+		
+		contactDAO.addOnContactCreated((contact) -> addContact(contact));
 
-		callback = (contact) -> {
-			initCall(contact);
+		callback = (contact) -> { 
+			selectedContact = contact; 
+			setupVideoScreen();
 		};
+		
 		setFirstContactCard();
 		setupContacts();
 		
 		listView.setOnMouseClicked((event) -> {
 			if (event.getButton().equals(MouseButton.SECONDARY)) {
 				listView.getSelectionModel().clearSelection();
+				selectedContact = null;
+				hideVideoScreen();
 			}
 		});
 	}
@@ -95,8 +111,7 @@ public class MainController {
 		if (videoScreen == null) {
 			try {
 				FXMLLoader screenLoader = new FXMLLoader();
-				screenLoader.setLocation(
-						ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
+				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
 				videoScreen = screenLoader.load();
 				videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
 				videoScreen.prefWidthProperty().bind(rightPane.widthProperty());
@@ -106,10 +121,14 @@ public class MainController {
 				System.out.println(LoggingUtils.getStackTrace(e));
 			}
 		}
-		rightPane.getChildren().add(videoScreen);
+		
+		if(!alreadyAdded) {
+			rightPane.getChildren().add(videoScreen);
+			alreadyAdded = true;
+		}
 	}
 
-	private void initCall(ContactModel contact) {
+	private void initCall() {
 		//envio peticion
 		Message msg = new Message();
 		msg.setDestination("jose");
@@ -117,7 +136,6 @@ public class MainController {
 		msg.setMessage("ole");
 		WebSocketClient wsc = new WebSocketClient("Toni", Origin.CHAT);
 		wsc.setPayloadHandler(new PayloadHandler() {
-			
 			@Override
 			public void setWebSocketClient(WebSocketClient webSocketClient) {
 				// TODO Auto-generated method stub
@@ -140,5 +158,6 @@ public class MainController {
 
 	public void hideVideoScreen() {
 		rightPane.getChildren().clear();
+		alreadyAdded = false;
 	}
 }
