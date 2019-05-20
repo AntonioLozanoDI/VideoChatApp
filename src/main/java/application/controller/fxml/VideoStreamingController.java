@@ -1,8 +1,17 @@
 package application.controller.fxml;
 
+import java.util.Optional;
+
+import com.diproject.commons.model.message.types.AcceptCall;
+import com.diproject.commons.model.message.types.InitCall;
+import com.sp.dialogs.DialogBuilder;
+
+import application.controller.session.SessionController;
+import application.controller.ws.VideoChatHandler;
 import application.services.VideoChatServiceManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,6 +61,9 @@ public class VideoStreamingController {
 	
 	private MainController mainController;
 	
+	private VideoChatHandler vch;
+	private SessionController sc;
+	
 	@FXML
 	private void initialize() {
 		setupGlassPane();
@@ -61,9 +73,38 @@ public class VideoStreamingController {
 		stopButton.setGraphic(stopView);
 		pauseButton.setGraphic(pauseView);
 		
+		sc = SessionController.getInstance();
+		vch = VideoChatHandler.getInstance();
+		
+		vch.setOnInitCall((call) -> {
+			onInit(call);
+		});
+		
+		vch.setOnAcceptCall((call) -> {
+			onAccept(call);
+		});
+		
 		VideoChatServiceManager.setupPlayer(imageView);
 		
 		initializeViewComponents();
+	}
+
+	private void onInit(InitCall call) {
+		initCallButton.setVisible(false);
+		Optional<ButtonType> btn = DialogBuilder.confirmation()
+		.content("Desea aceptar la llamada de " + call.getUser() + " ?.")
+		.finish().alert().showAndWait();
+		if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
+			
+		} else {
+			initCallButton.setVisible(true);
+		}
+	}
+
+	
+	private void onAccept(AcceptCall call) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	private void initializeViewComponents() {

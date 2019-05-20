@@ -15,6 +15,7 @@ import application.services.audio.receiver.AudioStreamingReceiverService;
 import application.services.video.receiver.VideoStreamingReceiverService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -40,6 +41,8 @@ public class ServerSettingsController {
 	private Label validationLabel;
 	@FXML
 	private Label serverAddressLabel;
+	@FXML
+	private Node clientAddressLabel;
 	@FXML
 	private ComboBox<String> clientAdressesCombo;
 	
@@ -101,12 +104,14 @@ public class ServerSettingsController {
 			case LOCAL:
 				ipAddressTF.setDisable(true);
 				serverAddressLabel.setDisable(true);
+				clientAddressLabel.setDisable(true);
 				validationLabel.setVisible(false);
 				clientAdressesCombo.setDisable(true);
 				break;
 			case REMOTE:
 				ipAddressTF.setDisable(false);
 				serverAddressLabel.setDisable(false);
+				clientAddressLabel.setDisable(false);
 				validationLabel.setVisible(true);
 				clientAdressesCombo.setDisable(false);
 				break;
@@ -123,6 +128,10 @@ public class ServerSettingsController {
 			//configClient.configureServer(serverAddress);
 			audioReceiver.setServerData(serverAddress);
 			videoReceiver.setServerData(serverAddress);
+			String addr = clientAdressesCombo.getSelectionModel().getSelectedItem();
+			if(addr != null && !addr.isEmpty()) {
+				sc.setSelfClientAddress(addr);
+			}
 			stage.close();
 		}
 	}

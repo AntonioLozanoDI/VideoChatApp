@@ -72,11 +72,13 @@ public class VideoChatServiceManager {
 		audioSender.startSender();
 		videoSender.startSender();
 		
-		audioRecorder.startRecorder();
-		videoRecorder.startRecorder();
-		
 		audioReceiver.startReceiver();
 		videoReceiver.startReceiver();
+	}
+	
+	public static void acceptCall() {
+		audioRecorder.startRecorder();
+		videoRecorder.startRecorder();
 
 		audioPlayer.startPlayer();
 		videoPlayer.startPlayer();

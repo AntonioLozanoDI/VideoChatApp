@@ -9,6 +9,8 @@ public class SessionController {
 	private ProfileModel activeUser;
 	
 	private String serverAddress;
+	
+	private String selfClientAddress;
 
 	public static SessionController getInstance() {
 		return instance == null ? instance = new SessionController() : instance;
@@ -32,5 +34,13 @@ public class SessionController {
 
 	public void setServerAddress(String serverAddress) {
 		this.serverAddress = serverAddress;
+	}
+
+	public String getSelfClientAddress() {
+		return selfClientAddress;
+	}
+
+	public void setSelfClientAddress(String selfClientAddress) {
+		this.selfClientAddress = selfClientAddress;
 	}
 }
