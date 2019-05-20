@@ -76,6 +76,7 @@ public class LoginController {
 				configClient.configureServer(serverField.getText());
 				userClient.login(user);
 				sc.setLoggerUser(user);
+				sc.setServerAddress(serverField.getText());
 				sc.setClient(new WebSocketClient(user.getLogin(), Origin.CHAT));
 				valid = true;
 				windowStage.close();

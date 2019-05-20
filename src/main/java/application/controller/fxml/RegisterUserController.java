@@ -91,6 +91,7 @@ public class RegisterUserController {
 				configClient.configureServer(serverField.getText());
 				userClient.signup(user);
 				sc.setLoggerUser(user);
+				sc.setServerAddress(serverField.getText());
 				sc.setClient(new WebSocketClient(user.getLogin(), Origin.CHAT));
 				registerListener.notifyListener();
 				ok = true;
