@@ -40,8 +40,7 @@
 }
 
 .roundedButton{
-	-fx-background-radius: 5.5em; 
-	-fx-text-fill: red;
+	-fx-background-radius: 5.5em;
 	-fx-min-width: 40.0px; 
 	-fx-min-height: 40.0px; 
 	-fx-max-width: 40.0px;
@@ -61,6 +60,7 @@
 .contactLabel{
 	-fx-text-fill: black; 
 }
+
 .contactLabel:selected{
 	-fx-text-fill: black; 
 }

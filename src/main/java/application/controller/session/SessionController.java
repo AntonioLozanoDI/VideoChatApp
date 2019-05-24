@@ -1,15 +1,15 @@
 package application.controller.session;
 
-import com.diproject.commons.model.User;
 import com.diproject.commons.utils.ws.WebSocketClient;
 
 import application.controller.ws.VideoChatHandler;
+import application.model.ProfileModel;
 
 public class SessionController {
 
 	private static SessionController instance;
 	
-	private User activeUser;
+	private ProfileModel loggedOnProfile;
 	
 	private String serverAddress;
 	
@@ -21,12 +21,12 @@ public class SessionController {
 		return instance == null ? instance = new SessionController() : instance;
 	}
 
-	public void setLoggerUser(User activeUser) {
-		this.activeUser = activeUser;
+	public void setLoggedUser(ProfileModel loggedOnProfile) {
+		this.loggedOnProfile = loggedOnProfile;
 	}
 	
-	public User getLoggerUser() {
-		return activeUser;
+	public ProfileModel getLoggerUser() {
+		return loggedOnProfile;
 	}
 	
 	public boolean isServerConfigured() {
@@ -51,7 +51,9 @@ public class SessionController {
 	
 	public void setClient(WebSocketClient wsc) {
 		this.wsc = wsc;
-		wsc.setPayloadHandler(VideoChatHandler.getInstance());
+		VideoChatHandler ph = VideoChatHandler.getInstance();
+		ph.setWebSocketClient(wsc);
+		wsc.setPayloadHandler(ph);
 		wsc.connect();
 	}
 	

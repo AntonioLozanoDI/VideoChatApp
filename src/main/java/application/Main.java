@@ -1,5 +1,6 @@
 package application;
 
+import application.services.Service;
 import application.view.ApplicationView;
 import application.view.VideoChatAppView;
 import application.view.modal.ApplicationModal;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 import utils.database.DatabaseHelper;
 
 public class Main extends Application {
+	
 	@Override
 	public void start(Stage primaryStage) {
 		DatabaseHelper.askApplicationDatabase();
@@ -16,8 +18,15 @@ public class Main extends Application {
 		ApplicationModal.build(LoginWindow.class, null).showView();
 		ApplicationView.launchView(VideoChatAppView.class, primaryStage, true);
 	}
+	
+	@Override
+	public void stop() throws Exception {
+		Service.killServices();
+		System.exit(0);
+	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 }

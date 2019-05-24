@@ -1,7 +1,5 @@
 package application.controller.fxml;
 
-import java.util.Optional;
-
 import com.diproject.commons.model.Origin;
 import com.diproject.commons.model.User;
 import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
@@ -13,6 +11,7 @@ import com.sp.fxutils.validation.FXUtils;
 import application.controller.session.SessionController;
 import application.model.ProfileModel;
 import application.model.dao.ProfileDAO;
+import http.status.exceptions.Http409ConflictException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -90,11 +89,11 @@ public class RegisterUserController {
 			try {
 				configClient.configureServer(serverField.getText());
 				userClient.signup(user);
-				sc.setLoggerUser(user);
-				sc.setServerAddress(serverField.getText());
-				sc.setClient(new WebSocketClient(user.getLogin(), Origin.CHAT));
+				saveUser(user);
 				registerListener.notifyListener();
 				ok = true;
+			} catch (Http409ConflictException e) {	
+				registerWarning.setText("Ya existe un usuario con el login que has introducido");
 			} catch (Exception e) {
 				DialogBuilder.warn().exceptionContent(e).alert().showAndWait();
 			}
@@ -106,6 +105,18 @@ public class RegisterUserController {
 		}
 	}
 	
+	private void saveUser(User user) {
+		ProfileModel prof = ProfileModel.fromUser(user);
+		boolean saved = profileDAO.saveProfile(prof);
+		if(!saved) {
+			ProfileModel.editUserFromProfile(user, prof);
+			userClient.update(user);
+		}
+		sc.setLoggedUser(prof);
+		sc.setServerAddress(serverField.getText());
+		sc.setClient(new WebSocketClient(user.getLogin(), Origin.VIDEO));
+	}
+
 	private boolean checkTextFields() {
 		boolean validLogin = FXUtils.textfieldTextIsNotNullOrEmpty(loginField);
 		boolean validNombre = FXUtils.textfieldTextIsNotNullOrEmpty(nombreField);
@@ -117,9 +128,9 @@ public class RegisterUserController {
 		return validLogin && validNombre && validApellido1 && validApellido2 && validPassword && validServer;
 	}
 	
-	private void showWrongParams(boolean show) {
+	private void showWrongParams(boolean validParams) {
 		String warn = "Por favor rellene todos los campos";
-		registerWarning.setText(show ? warn : "");
+		registerWarning.setText(validParams ? "" : warn);
 	}
 	
 	private void showFailedRegister(boolean show) {

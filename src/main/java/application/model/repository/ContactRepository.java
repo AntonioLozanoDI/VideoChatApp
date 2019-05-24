@@ -20,15 +20,17 @@ public class ContactRepository {
 
 	private Logger logger = ApplicationLoggers.modelLogger;
 
-	private final String insertStmt = "INSERT INTO Contact (nombre,apellido1,apellido2) VALUES (?,?,?);";
+	private final String insertStmt = "INSERT INTO Contact (dataId,profileId) VALUES (?,?);";
 
-	private final String deleteStmt = "DELETE FROM Contact WHERE id = ? AND nombre = ? AND apellido1 = ? AND apellido2 = ?;";
+	private final String deleteStmt = "DELETE FROM Contact WHERE id = ? AND dataId = ? AND profileId = ?;";
 
 	private final String selectAllStmt = "SELECT * FROM Contact;";
+	
+	private final String selectByProfileId = "SELECT * FROM Contact WHERE profileId = ?;";
 
 	private final String lastIdStmt = "SELECT seq FROM sqlite_sequence WHERE name = ?;";
 
-	private final String updateStmt = "UPDATE Contact SET nombre = ?, apellido1 = ?, apellido2 = ? WHERE id = ?;";
+	private final String updateStmt = "UPDATE Contact SET dataId = ?, profileId = ? WHERE id = ?;";
 
 	private Connection con = null;
 
@@ -55,8 +57,10 @@ public class ContactRepository {
 			ResultSet rs = st.executeQuery();
 			contacts = new ArrayList<>();
 			while (rs.next()) {
-				ContactModel contact = new ContactModel(rs.getString(2), rs.getString(3), rs.getString(4));
-				contact.setId(rs.getInt(1));
+				ContactModel contact = new ContactModel();
+				contact.setContactId(rs.getInt(1));
+				contact.setDataId(rs.getInt(2));
+				contact.setProfileId(rs.getInt(3));
 				contacts.add(contact);
 			}
 			Collections.sort(contacts, ContactModel.ID_COMPARATOR);
@@ -68,7 +72,7 @@ public class ContactRepository {
 		return contacts == null ? Collections.emptyList() : contacts;
 	}
 
-	public int findLastSettingId() {
+	public int findLastContactId() {
 		int id = -1;
 		try {
 			PreparedStatement st = con.prepareStatement(lastIdStmt);
@@ -81,13 +85,33 @@ public class ContactRepository {
 		}
 		return id;
 	}
+	
+	public List<ContactModel> findByProfileId(int profileId) {
+		List<ContactModel> contacts = null;
+		try {
+			PreparedStatement st = con.prepareStatement(selectByProfileId);
+			st.setInt(1, profileId);
+			ResultSet rs = st.executeQuery();
+			contacts = new ArrayList<>();
+			while (rs.next()) {
+				ContactModel contact = new ContactModel();
+				contact.setContactId(rs.getInt(1));
+				contact.setDataId(rs.getInt(2));
+				contact.setProfileId(rs.getInt(3));
+				contacts.add(contact);
+			}
+		} catch (SQLException e) {
+			String trace = String.format("Error trying to execute SELECT statement into Contact table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
+			logger.severe(trace);
+		}
+		return contacts == null ? Collections.<ContactModel>emptyList() : contacts;
+	}
 
 	public void insert(ContactModel contact) {
 		try {
 			PreparedStatement st = con.prepareStatement(insertStmt);
-			st.setString(1, contact.getNombre());
-			st.setString(2, contact.getPrimerApellido());
-			st.setString(3, contact.getSegundoApellido());
+			st.setInt(1, contact.getDataId());
+			st.setInt(2, contact.getProfileId());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			String trace = String.format("Error trying to execute INSERT statement into Contact table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
@@ -98,10 +122,9 @@ public class ContactRepository {
 	public void delete(ContactModel contact) {
 		try {
 			PreparedStatement st = con.prepareStatement(deleteStmt);
-			st.setInt(1, contact.getId());
-			st.setString(2, contact.getNombre());
-			st.setString(3, contact.getPrimerApellido());
-			st.setString(4, contact.getSegundoApellido());
+			st.setInt(1, contact.getContactId());
+			st.setInt(2, contact.getDataId());
+			st.setInt(3, contact.getProfileId());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			String trace = String.format("Error trying to execute DELETE statement into Contact table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));
@@ -112,10 +135,9 @@ public class ContactRepository {
 	public void update(ContactModel contact) {
 		try {
 			PreparedStatement st = con.prepareStatement(updateStmt);
-			st.setString(1, contact.getNombre());
-			st.setString(2, contact.getPrimerApellido());
-			st.setString(3, contact.getSegundoApellido());
-			st.setInt(4, contact.getId());
+			st.setInt(1, contact.getDataId());
+			st.setInt(2, contact.getProfileId());
+			st.setInt(3, contact.getContactId());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			String trace = String.format("Error trying to execute UPDATE statement into Contact table in %s%n%s", getClass().getSimpleName(), LoggingUtils.getStackTrace(e));

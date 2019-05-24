@@ -51,7 +51,9 @@ public class AudioPlayerService extends AbstractPlayerService implements AudioHa
 	
 	@Override
 	protected void onStopedService() {
-		sourceLine.stop();
+		if(sourceLine != null)
+			sourceLine.stop();
+		
 		read = false;
 	}
 }

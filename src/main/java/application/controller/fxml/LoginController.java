@@ -1,6 +1,6 @@
 package application.controller.fxml;
 
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.diproject.commons.model.Origin;
 import com.diproject.commons.model.User;
@@ -15,8 +15,10 @@ import application.model.ProfileModel;
 import application.model.dao.ProfileDAO;
 import application.view.modal.ApplicationModal;
 import application.view.modal.RegisterUserWindow;
-import javafx.application.Platform;
+import http.status.exceptions.Http404NotFoundException;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -26,7 +28,7 @@ import utils.constants.Styles;
 public class LoginController {
 
 	@FXML
-	private TextField loginField;
+	private ComboBox<String> loginField;
 	@FXML
 	private PasswordField passwordField;
 	@FXML
@@ -50,7 +52,7 @@ public class LoginController {
 	
 	private ProfileDAO profileDAO;
 	
-	private SessionController sc;;
+	private SessionController sc;
 
 	@FXML
 	private void initialize() {
@@ -58,6 +60,9 @@ public class LoginController {
 		loginWarning.setText("");
 		loginWarning.setId(Styles.Common.warningLabel);
 		profileDAO = ProfileDAO.getInstance();
+		loginField.setEditable(true);
+		loginField.setItems(FXCollections.observableArrayList(profileDAO.readAllProfiles().stream().map(prof -> prof.getLogin()).collect(Collectors.toList())));
+		loginField.getSelectionModel().selectFirst();
 		sc = SessionController.getInstance(); 
 		userClient = new UserHTTPClient();
 		configClient = new ConfigurationHTTPClient();
@@ -65,21 +70,21 @@ public class LoginController {
 
 	@FXML
 	private void validateLogin() {
-		boolean loginValid = FXUtils.textfieldTextIsNotNullOrEmpty(loginField);
+		String login = loginField.getSelectionModel().getSelectedItem();
 		boolean passValid = FXUtils.textfieldTextIsNotNullOrEmpty(passwordField);
 		boolean serverValid = FXUtils.textfieldTextIsNotNullOrEmpty(serverField);
-		if (loginValid && passValid && serverValid) {
+		if (login != null && !login.isEmpty() && passValid && serverValid) {
 			User user = new User();
-			user.setLogin(loginField.getText());
+			user.setLogin(login);
 			user.setPassword(passwordField.getText());
 			try {
 				configClient.configureServer(serverField.getText());
 				userClient.login(user);
-				sc.setLoggerUser(user);
-				sc.setServerAddress(serverField.getText());
-				sc.setClient(new WebSocketClient(user.getLogin(), Origin.CHAT));
+				loadProfile(user);
 				valid = true;
 				windowStage.close();
+			} catch (Http404NotFoundException e) {
+				loginWarning.setText("No se ha encontrado el usuario en el sistema");
 			} catch (Exception e) {
 				DialogBuilder.warn().exceptionContent(e).alert().showAndWait();
 			}
@@ -99,6 +104,27 @@ public class LoginController {
 			});
 		}
 		registerWindow.showView();
+	}
+
+	private void loadProfile(User user) {
+		if(!userPreviouslyLoggedOn(user.getLogin())) {
+			User found = userClient.find(user.getLogin());
+			ProfileModel newLoggedUser = ProfileModel.fromUser(found);
+			profileDAO.saveProfile(newLoggedUser);
+			sc.setLoggedUser(newLoggedUser);
+		}
+		sc.setServerAddress(serverField.getText());
+		sc.setClient(new WebSocketClient(user.getLogin(), Origin.VIDEO));
+	}
+	
+	private boolean userPreviouslyLoggedOn(String login) {
+		boolean userPreviouslyLoggedOn = false;
+		ProfileModel profile = profileDAO.findByLogin(login);
+		if(profile != null) {
+			sc.setLoggedUser(profile);
+			userPreviouslyLoggedOn = true;
+		}	
+		return userPreviouslyLoggedOn;
 	}
 	
 	@FXML
@@ -121,6 +147,6 @@ public class LoginController {
 
 	public void checkLogin() {
 		if(!valid) 
-			Platform.exit();
+			System.exit(0);
 	}
 }

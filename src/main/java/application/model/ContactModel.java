@@ -2,95 +2,101 @@ package application.model;
 
 import java.util.Comparator;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class ContactModel {
 
-	private int id;
+	public static final Comparator<ContactModel> ID_COMPARATOR = (model1, model2) -> Integer.compare(model1.getDataId(),model2.getDataId());
+
+	private int contactId;
+
+	private int profileId;
 	
-	private String userId;
+	private PersonData personData;
 
-	private StringProperty fullNameProperty;
-
-	private StringProperty nombreProperty;
-
-	private StringProperty primerApellidoProperty;
-
-	private StringProperty segundoApellidoProperty;
-	
-	public static final Comparator<ContactModel> ID_COMPARATOR = (model1,model2) -> Integer.compare(model1.getId(), model2.getId()); 
-
-	public ContactModel(String nombre, String apellido1, String apellido2) {
-		super();
-
-		nombreProperty = new SimpleStringProperty(nombre);
-		primerApellidoProperty = new SimpleStringProperty(apellido1);
-		segundoApellidoProperty = new SimpleStringProperty(apellido2);
-		fullNameProperty = new SimpleStringProperty(apellido2);
-
-		updateFullName();
-
-		nombreProperty.addListener((observable, oldValue, newValue) -> {
-			updateFullName();
-		});
-		primerApellidoProperty.addListener((observable, oldValue, newValue) -> {
-			updateFullName();
-		});
-		segundoApellidoProperty.addListener((observable, oldValue, newValue) -> {
-			updateFullName();
-		});
+	public ContactModel() {
+		this.personData = new PersonData();
 	}
 
-	private void updateFullName() {
-		fullNameProperty.set(String.format("%s %s %s", getNombre(), getPrimerApellido(), getSegundoApellido()));
+	public ContactModel(int profileId) {
+		this.profileId = profileId;
+		this.personData = new PersonData();
+	}
+	
+	public boolean isNew() {
+		return contactId < 1;
 	}
 
-	public int getId() {
-		return id;
+	public int getContactId() {
+		return contactId;
+	}
+
+	public void setContactId(int contactId) {
+		this.contactId = contactId;
+	}
+
+	public int getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(int profileId) {
+		this.profileId = profileId;
+	}
+
+	public PersonData getPersonData() {
+		return personData;
+	}
+
+	public void setPersonData(PersonData personData) {
+		this.personData = personData;
+	}
+
+	public int getDataId() {
+		return personData.getDataId();
+	}
+
+	public String getLogin() {
+		return personData.getLogin();
 	}
 
 	public String getNombre() {
-		return nombreProperty.get();
+		return personData.getNombre();
 	}
 
 	public String getPrimerApellido() {
-		return primerApellidoProperty.get();
+		return personData.getPrimerApellido();
 	}
 
 	public String getSegundoApellido() {
-		return segundoApellidoProperty.get();
+		return personData.getSegundoApellido();
 	}
 
 	public String getNombreCompleto() {
-		return fullNameProperty.get();
+		return personData.getNombreCompleto();
 	}
 
 	public StringProperty fullNameProperty() {
-		return fullNameProperty;
+		return personData.fullNameProperty();
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setDataId(int id) {
+		personData.setDataId(id);
+	}
+
+	public void setLogin(String login) {
+		personData.setLogin(login);
 	}
 
 	public void setNombre(String nombre) {
-		nombreProperty.set(nombre);
+		personData.setNombre(nombre);
 	}
 
 	public void setPrimerApellido(String apellido1) {
-		primerApellidoProperty.set(apellido1);
+		personData.setPrimerApellido(apellido1);
 	}
 
 	public void setSegundoApellido(String apellido2) {
-		segundoApellidoProperty.set(apellido2);
+		personData.setSegundoApellido(apellido2);
 	}
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
 }

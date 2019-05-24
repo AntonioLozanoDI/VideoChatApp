@@ -29,10 +29,13 @@ public class ContactFormController {
 		boolean apellido1Valid = FXUtils.textfieldTextIsNotNullOrEmpty(apellido1TF);
 		boolean apellido2Valid = FXUtils.textfieldTextIsNotNullOrEmpty(apellido2TF);
 		if(userIdValid && nombreValid && apellido1Valid && apellido2Valid) {
-			contact = new ContactModel(nombreTF.getText(), apellido1TF.getText(), apellido2TF.getText());
-			contact.setUserId(userIdTF.getText());
+			contact = new ContactModel();
+			contact.setNombre(nombreTF.getText());
+			contact.setPrimerApellido(apellido1TF.getText());
+			contact.setSegundoApellido(apellido2TF.getText());
+			contact.setLogin(userIdTF.getText());
+			formStage.close();
 		}
-		formStage.close();
 	}
 
 	public void setWindowStage(Stage formStage) {

@@ -1,6 +1,8 @@
 package application.controller.fxml;
 
+import application.controller.session.SessionController;
 import application.model.ContactModel;
+import application.model.ProfileModel;
 import application.model.dao.ContactDAO;
 import application.view.modal.ApplicationModal;
 import application.view.modal.ContactForm;
@@ -39,7 +41,9 @@ public class CreateContactCardController {
 		contactForm.showView();
 		ContactFormController controller = contactForm.getController();
 		ContactModel contact = controller.getContact();
+		ProfileModel prof = SessionController.getInstance().getLoggerUser();
 		if(contact != null) {
+			contact.setProfileId(prof.getProfileId());
 			contactDAO.saveContact(contact);
 		}
 	}

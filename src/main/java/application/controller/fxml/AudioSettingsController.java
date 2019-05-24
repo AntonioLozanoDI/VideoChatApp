@@ -37,7 +37,7 @@ import javafx.util.Callback;
 import utils.logging.LoggingUtils;
 
 public class AudioSettingsController {
-
+	
 	@FXML
 	private ComboBox<AudioSettingsModel> comboSettings;
 	@FXML
@@ -263,7 +263,7 @@ public class AudioSettingsController {
 	}
 
 	@FXML
-	private void editConfig() {// TODO
+	private void editConfig() {
 		settingsDAO.updateAudioSetting(retrieveDataFromForm(lastSelectedSetting));
 		dataUnsync = false;
 	}
@@ -319,7 +319,6 @@ public class AudioSettingsController {
 	}
 
 	public boolean isAudioDataConfigured() {
-		System.out.println(captureDevice != null && lines != null && lines.source != null && lines.target != null);
 		return captureDevice != null && lines != null && lines.source != null && lines.target != null;
 	}
 
@@ -390,6 +389,7 @@ public class AudioSettingsController {
 
 	private ChangeListener<Object> listener() {
 		return (observable, oldValue, newValue) -> {
+			System.out.println(oldValue != newValue);
 			dataUnsync = oldValue != newValue;
 		};
 	}

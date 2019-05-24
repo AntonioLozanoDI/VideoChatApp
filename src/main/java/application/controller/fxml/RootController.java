@@ -1,6 +1,5 @@
 package application.controller.fxml;
 
-import application.services.Service;
 import application.view.modal.ApplicationModal;
 import application.view.modal.AudioSettingsWindow;
 import application.view.modal.ProfileSettingsWindow;
@@ -53,8 +52,7 @@ public class RootController {
 	
 	@FXML
 	private void closeApplication() {
-		Service.stopServices();
-		System.exit(0);
+		Platform.exit();
 	}
 	
 	@FXML

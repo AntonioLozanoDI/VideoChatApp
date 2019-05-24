@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -10,16 +11,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="276.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.fxml.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="276.0" prefWidth="300.0" stylesheets="@../../../../resources/styles/application.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.fxml.LoginController">
    <center>
       <AnchorPane prefHeight="217.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
             <VBox layoutX="50.0" layoutY="17.0" prefHeight="201.0" prefWidth="200.0" spacing="5.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="7.0">
                <children>
-                  <Pane prefWidth="0.0">
+                  <Pane prefHeight="50.0" prefWidth="200.0">
                      <children>
                         <Label prefHeight="25.0" prefWidth="200.0" text="Login" />
-                        <TextField fx:id="loginField" layoutY="26.0" prefHeight="25.0" prefWidth="200.0" />
+                        <ComboBox fx:id="loginField" accessibleRole="TEXT_AREA" editable="true" layoutX="1.0" layoutY="25.0" pickOnBounds="false" prefHeight="25.0" prefWidth="198.0" />
                      </children>
                   </Pane>
                   <Pane prefHeight="50.0" prefWidth="0.0">

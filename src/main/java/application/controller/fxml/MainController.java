@@ -1,15 +1,5 @@
 package application.controller.fxml;
 
-import com.diproject.commons.model.Origin;
-import com.diproject.commons.model.Payload;
-import com.diproject.commons.model.message.types.Message;
-import com.diproject.commons.utils.Utils;
-import com.diproject.commons.utils.payload.PayloadFactory;
-import com.diproject.commons.utils.ws.PayloadHandler;
-import com.diproject.commons.utils.ws.WebSocketClient;
-
-import application.controller.session.SessionController;
-import application.controller.ws.VideoChatHandler;
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
 import application.view.component.ContactCard;
@@ -59,36 +49,31 @@ public class MainController {
 	
 	private ContactModel selectedContact;
 	
-	private SessionController sc;
-	
-	private VideoChatHandler vch;
-	
 	private boolean alreadyAdded;
+	
+	private boolean liveStreaming;
 
 	@FXML
 	private void initialize() {
 		contactDAO = ContactDAO.getInstance();
+		
 		camIcon.setImage(ApplicationResourceProvider.getPNGFile(Constants.Files.Images.camIcon).toImage());
 		camIcon.setFitHeight(80);
 		camIcon.setFitWidth(80);
-		
-		sc = SessionController.getInstance();
-		vch = VideoChatHandler.getInstance();
 		
 		contactDAO.addOnContactCreated((contact) -> addContact(contact));
 
 		callback = (contact) -> { 
 			selectedContact = contact; 
 			setupVideoScreen();
-			videoStreamingController.setSelectedContact(selectedContact.getUserId());
-			setupVideoScreen();
+			videoStreamingController.setSelectedContact(selectedContact.getLogin());
 		};
 		
 		setFirstContactCard();
 		setupContacts();
 		
 		listView.setOnMouseClicked((event) -> {
-			if (event.getButton().equals(MouseButton.SECONDARY)) {
+			if (event.getButton().equals(MouseButton.SECONDARY) && !liveStreaming) {
 				listView.getSelectionModel().clearSelection();
 				selectedContact = null;
 				hideVideoScreen();
@@ -105,7 +90,7 @@ public class MainController {
 	}
 
 	private void setupContacts() {
-		contactDAO.getAllContacts().stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc,callback).getParent()));
+		contactDAO.readAllContacts().stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc,callback).getParent()));
 		listView.setItems(contactCards);
 	}
 
@@ -129,34 +114,6 @@ public class MainController {
 			alreadyAdded = true;
 		}
 	}
-
-	private void initCall() {
-		//envio peticion
-		Message msg = new Message();
-		msg.setDestination("jose");
-		msg.setOrigin("Toni");
-		msg.setMessage("ole");
-		WebSocketClient wsc = new WebSocketClient("Toni", Origin.CHAT);
-		wsc.setPayloadHandler(new PayloadHandler() {
-			@Override
-			public void setWebSocketClient(WebSocketClient webSocketClient) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void handlePayload(Payload payload) {
-				Message ex = PayloadFactory.extract(payload);
-				System.out.println(Utils.JSON.toJson(ex));
-			}
-		});
-		wsc.connect();
-		wsc.send(PayloadFactory.create(msg));
-		//espero peticion
-		
-		
-	}
-
 
 	public void hideVideoScreen() {
 		rightPane.getChildren().clear();

@@ -19,18 +19,14 @@ public class VideoChatHandler implements PayloadHandler {
 	private static VideoChatHandler instance;
 
 	private WebSocketClient webSocketClient;
+	
+	private OnMessageReceived<AcceptCall> accept;
 
-	private boolean acceptResponse;
+	private OnMessageReceived<InitCall> init;
 
-	private long instant;
+	private OnMessageReceived<PauseCall> pause;
 
-	private OnMessageReceived accept;
-
-	private OnMessageReceived init;
-
-	private OnMessageReceived pause;
-
-	private OnMessageReceived stop;
+	private OnMessageReceived<StopCall> stop;
 
 	public static VideoChatHandler getInstance() {
 		return instance == null ? instance = new VideoChatHandler() : instance;
@@ -38,6 +34,7 @@ public class VideoChatHandler implements PayloadHandler {
 
 	@Override
 	public void handlePayload(Payload payload) {
+		
 		MessageType type = MessageType.valueOf(payload.getType());
 		switch (type) {
 		case ACCEPT_CALL:

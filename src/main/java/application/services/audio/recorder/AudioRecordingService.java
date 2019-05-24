@@ -70,7 +70,8 @@ public class AudioRecordingService extends AbstractRecordingService implements A
 	@Override
 	public void stopRecorder() {
 		pause = true;
-		targetLine.stop();
+		if(targetLine != null)
+			targetLine.stop();
 	}
 
 	@Override

@@ -17,6 +17,8 @@ public abstract class Service extends Thread {
 
 	protected int INTERVAL;
 	
+	private boolean killed;
+	
 	private boolean serviceStoped = true;
 	
 	private List<ServiceTask> serviceTasks;
@@ -25,6 +27,7 @@ public abstract class Service extends Thread {
 		super();
 		services.add(this);
 		serviceTasks = new ArrayList<>();
+		this.setName(getClass().getSimpleName());
 	}
 
 	public final void addServiceTask(ServiceTask serviceTask) {
@@ -38,6 +41,11 @@ public abstract class Service extends Thread {
 		} catch (Exception e) {
 			System.out.println(LoggingUtils.getStackTrace(e));
 		}
+	}
+	
+	public final void killService() {
+		stopService();
+		killed = true;
 	}
 	
 	public final void resumeService() {
@@ -61,17 +69,18 @@ public abstract class Service extends Thread {
 					serviceTasks.forEach(ServiceTask::call);
 					Thread.sleep(INTERVAL);
 				} catch (Exception e) {
-					System.err.println(LoggingUtils.getStackTrace(e));
+					System.err.println(getClass().getSimpleName() +  ": " + LoggingUtils.getStackTrace(e));
 				}
 			}
+			if(killed)
+				interrupt();
 		}
 	}
 	
 	protected abstract void onStopedService();
 
-	public static void stopServices() {
-		services.forEach(Service::stopService);
-		services.forEach(Service::interrupt);
+	public static void killServices() {
+		services.forEach(Service::killService);
 	}
 	
 	public abstract void status();
