@@ -97,8 +97,8 @@ public class ContactDAO {
 		if(!contact.isNew()) {
 			contactRepository.delete(contact);
 			personDataRepository.delete(contact.getPersonData());
-			listenersDelete.forEach(listener -> listener.onChange(contact));
 		}
+		listenersDelete.forEach(listener -> listener.onChange(contact));
 	}
 
 	public void addOnContactCreated(ContactDataChanged listener) {
