@@ -135,6 +135,8 @@ public class VideoStreamingController {
 	
 	private void onAccept(AcceptCall call) {
 		if(call.isAccepted()) {
+			System.out.println("REMOTTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE: " + call.getAddress());
+			
 			AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoChatServiceManager.acceptCall();

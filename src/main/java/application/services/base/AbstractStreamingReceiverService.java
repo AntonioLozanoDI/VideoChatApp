@@ -65,7 +65,7 @@ public abstract class AbstractStreamingReceiverService extends Service {
 			String trace = null;
 			DatagramPacket peticion = new DatagramPacket(buff, buff.length,remote,port);
 			try {
-				socketUDP.receive(peticion);
+				socketUDP.send(peticion);
 				connected = true;
 				
 				listeners.forEach(ConnectionListener::onClientConnected);

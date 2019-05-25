@@ -6,9 +6,11 @@ import com.diproject.commons.model.message.types.AcceptCall;
 import com.diproject.commons.model.message.types.InitCall;
 import com.diproject.commons.model.message.types.PauseCall;
 import com.diproject.commons.model.message.types.StopCall;
+import com.diproject.commons.utils.Utils;
 import com.diproject.commons.utils.ws.WebSocketClient;
 import com.diproject.commons.utils.ws.payload.PayloadFactory;
 import com.diproject.commons.utils.ws.payload.PayloadHandler;
+import com.google.gson.Gson;
 
 public class VideoChatHandler implements PayloadHandler {
 
@@ -34,7 +36,7 @@ public class VideoChatHandler implements PayloadHandler {
 
 	@Override
 	public void handlePayload(Payload payload) {
-		
+		System.out.println(Utils.JSON.toJson(payload));
 		MessageType type = MessageType.valueOf(payload.getType());
 		switch (type) {
 		case ACCEPT_CALL:
