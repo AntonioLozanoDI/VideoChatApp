@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
+import com.diproject.commons.utils.rest.clients.ConfigurationClient;
 
 import application.controller.session.SessionController;
 import javafx.collections.FXCollections;
@@ -50,7 +50,7 @@ public class ServerSettingsController {
 	
 	private SessionController sc;
 	
-	private ConfigurationHTTPClient configClient;
+	private ConfigurationClient configClient;
 
 	@FXML
 	private void initialize() {
@@ -79,7 +79,7 @@ public class ServerSettingsController {
 		
 		sc = SessionController.getInstance();
 		
-		configClient = new ConfigurationHTTPClient();
+		configClient = new ConfigurationClient();
 		
 		if(sc.isServerConfigured()) {
 			ipAddressTF.textProperty().set(sc.getServerAddress());

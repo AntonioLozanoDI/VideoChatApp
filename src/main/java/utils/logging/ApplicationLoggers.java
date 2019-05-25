@@ -23,6 +23,7 @@ public final class ApplicationLoggers {
 	private static Handler controllerHandler;
 	private static Handler viewHandler;
 	private static Handler utilsHandler;
+	private static Handler servicesHandler;
 	
 	private static Formatter formatter = new ApplicationLoggingFormatter();
 	
@@ -37,6 +38,7 @@ public final class ApplicationLoggers {
 			controllerHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.controllerLogFile).toString());
 			viewHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.viewLogFile).toString());
 			utilsHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.utilsLogFile).toString());
+			servicesHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.servicesLogFile).toString());
 
 			logger.info("Application loggers successfully configured.");
 		} catch (SecurityException e) {
@@ -51,6 +53,7 @@ public final class ApplicationLoggers {
 	public static Logger controllerLogger 	= create("VideoChat.logger.controller", controllerHandler);
 	public static Logger viewLogger 		= create("VideoChat.logger.view", viewHandler);
 	public static Logger utilsLogger 		= create("VideoChat.logger.utils", utilsHandler);
+	public static Logger servicesLogger 		= create("VideoChat.logger.services", servicesHandler);
 
 	private static Logger create(String name, Handler...handlers) {
 		Logger l = Logger.getLogger(name);

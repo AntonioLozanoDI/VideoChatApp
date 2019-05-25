@@ -96,6 +96,7 @@ public class Constants {
 			public static final String modelLogFile = "model-videochatapp";
 			public static final String controllerLogFile = "controller-videochatapp";
 			public static final String utilsLogFile = "utils-videochatapp";
+			public static final String servicesLogFile = "services-videochatapp";
 		}
 	}
 

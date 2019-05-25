@@ -6,7 +6,7 @@ import com.diproject.commons.model.message.types.AcceptCall;
 import com.diproject.commons.model.message.types.InitCall;
 import com.diproject.commons.model.message.types.PauseCall;
 import com.diproject.commons.model.message.types.StopCall;
-import com.diproject.commons.utils.payload.PayloadFactory;
+import com.diproject.commons.utils.ws.payload.PayloadFactory;
 import com.sp.dialogs.DialogBuilder;
 
 import application.controller.session.SessionController;
@@ -14,6 +14,7 @@ import application.controller.ws.VideoChatHandler;
 import application.services.VideoChatServiceManager;
 import application.services.audio.receiver.AudioStreamingReceiverService;
 import application.services.video.receiver.VideoStreamingReceiverService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -105,21 +106,22 @@ public class VideoStreamingController {
 
 	private void onInit(InitCall call) {
 		initCallButton.setVisible(false);
-		
-		Optional<ButtonType> btn = DialogBuilder.confirmation()
-				.content("Desea aceptar la llamada de " + call.getUser() + " ?.")
-				.finish().alert().showAndWait();
-		
-		if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
-			init(false);
-			connectionContact = call.getOrigin();
-			AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
-			VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
-			sendAccept(call);
-			VideoChatServiceManager.acceptCall();
-		} else {
-			cancelCall();
-		}
+		Platform.runLater(()->{
+			Optional<ButtonType> btn = DialogBuilder.confirmation()
+					.content("Desea aceptar la llamada de " + call.getUser() + " ?.")
+					.finish().alert().showAndWait();
+			
+			if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
+				init(false);
+				connectionContact = call.getOrigin();
+				AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
+				VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
+				sendAccept(call);
+				VideoChatServiceManager.acceptCall();
+			} else {
+				cancelCall();
+			}
+		});
 	}
 	
 	private void sendAccept(InitCall call) {
@@ -139,6 +141,7 @@ public class VideoStreamingController {
 
 	private void onAccept(AcceptCall call) {
 		if(call.isAccepted()) {
+			System.out.println("REMOTE ADDRESS: "+ call.getAddress());
 			AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoChatServiceManager.acceptCall();

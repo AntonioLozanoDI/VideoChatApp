@@ -6,9 +6,9 @@ import com.diproject.commons.model.message.types.AcceptCall;
 import com.diproject.commons.model.message.types.InitCall;
 import com.diproject.commons.model.message.types.PauseCall;
 import com.diproject.commons.model.message.types.StopCall;
-import com.diproject.commons.utils.payload.PayloadFactory;
-import com.diproject.commons.utils.ws.PayloadHandler;
 import com.diproject.commons.utils.ws.WebSocketClient;
+import com.diproject.commons.utils.ws.payload.PayloadFactory;
+import com.diproject.commons.utils.ws.payload.PayloadHandler;
 
 public class VideoChatHandler implements PayloadHandler {
 

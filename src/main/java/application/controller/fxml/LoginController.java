@@ -4,8 +4,8 @@ import java.util.stream.Collectors;
 
 import com.diproject.commons.model.Origin;
 import com.diproject.commons.model.User;
-import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
-import com.diproject.commons.utils.rest.UserHTTPClient;
+import com.diproject.commons.utils.rest.clients.ConfigurationClient;
+import com.diproject.commons.utils.rest.clients.UserClient;
 import com.diproject.commons.utils.ws.WebSocketClient;
 import com.sp.dialogs.DialogBuilder;
 import com.sp.fxutils.validation.FXUtils;
@@ -46,9 +46,9 @@ public class LoginController {
 	
 	private RegisterUserWindow registerWindow;
 	
-	private UserHTTPClient userClient;
+	private UserClient userClient;
 	
-	private ConfigurationHTTPClient configClient;
+	private ConfigurationClient configClient;
 	
 	private ProfileDAO profileDAO;
 	
@@ -64,8 +64,8 @@ public class LoginController {
 		loginField.setItems(FXCollections.observableArrayList(profileDAO.readAllProfiles().stream().map(prof -> prof.getLogin()).collect(Collectors.toList())));
 		loginField.getSelectionModel().selectFirst();
 		sc = SessionController.getInstance(); 
-		userClient = new UserHTTPClient();
-		configClient = new ConfigurationHTTPClient();
+		userClient = new UserClient();
+		configClient = new ConfigurationClient();
 	}
 
 	@FXML

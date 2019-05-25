@@ -2,8 +2,8 @@ package application.controller.fxml;
 
 import com.diproject.commons.model.Origin;
 import com.diproject.commons.model.User;
-import com.diproject.commons.utils.rest.ConfigurationHTTPClient;
-import com.diproject.commons.utils.rest.UserHTTPClient;
+import com.diproject.commons.utils.rest.clients.ConfigurationClient;
+import com.diproject.commons.utils.rest.clients.UserClient;
 import com.diproject.commons.utils.ws.WebSocketClient;
 import com.sp.dialogs.DialogBuilder;
 import com.sp.fxutils.validation.FXUtils;
@@ -42,9 +42,9 @@ public class RegisterUserController {
 
 	private Stage windowStage;
 	
-	private UserHTTPClient userClient;
+	private UserClient userClient;
 	
-	private ConfigurationHTTPClient configClient;
+	private ConfigurationClient configClient;
 	
 	private ProfileDAO profileDAO;
 	
@@ -59,8 +59,8 @@ public class RegisterUserController {
 		
 		profileDAO = ProfileDAO.getInstance();
 		sc = SessionController.getInstance(); 
-		userClient = new UserHTTPClient();
-		configClient = new ConfigurationHTTPClient();
+		userClient = new UserClient();
+		configClient = new ConfigurationClient();
 		
 		loginField.textProperty().addListener(
 				(observable, oldValue, newValue) -> {	showWrongParams(checkTextFields());  });

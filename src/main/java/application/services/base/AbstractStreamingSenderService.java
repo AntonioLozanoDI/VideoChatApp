@@ -7,11 +7,16 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import application.services.Service;
+import utils.logging.ApplicationLoggers;
 import utils.logging.LoggingUtils;
 
 public abstract class AbstractStreamingSenderService extends Service {
+	
+	protected Logger logger = ApplicationLoggers.servicesLogger;
 	
 	public interface ConnectionListener {
 		void onClientConnected();
@@ -79,7 +84,7 @@ public abstract class AbstractStreamingSenderService extends Service {
 				System.out.println("Cliente conectado.");
 				System.out.print("Datagrama recibido del host: " + peticion.getAddress());
 				System.out.println(" desde el puerto remoto: " + peticion.getPort());
-				
+				logger.log(Level.INFO, String.format("Petition received from: %s:%s", peticion.getAddress().getHostAddress(), peticion.getPort()));
 				clientConnected = true;
 				
 				listeners.forEach(ConnectionListener::onClientConnected);
