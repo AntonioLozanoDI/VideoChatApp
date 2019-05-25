@@ -90,9 +90,6 @@ public abstract class AbstractStreamingSenderService extends Service {
 				clientConnected = true;
 				
 				listeners.forEach(ConnectionListener::onClientConnected);
-				
-				peticion = new DatagramPacket(bufer, bufer.length,peticion.getAddress(),peticion.getPort());
-				socketUDP.send(peticion);
 			} catch (SocketException e) {
 				System.out.println("Socket: " + e.getMessage());
 			} catch (IOException e) {
@@ -111,7 +108,7 @@ public abstract class AbstractStreamingSenderService extends Service {
 					// Enviamos la respuesta
 					socketUDP.send(respuesta);
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println(LoggingUtils.getStackTrace(e));
 				}
 			}
 		}
