@@ -112,10 +112,10 @@ public class VideoStreamingController {
 					.finish().alert().showAndWait();
 			
 			if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
-				init(false);
 				connectionContact = call.getOrigin();
 				AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 				VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
+				init(false);
 				sendAccept(call);
 				VideoChatServiceManager.acceptCall();
 			} else {
@@ -132,16 +132,9 @@ public class VideoStreamingController {
 		accept.setDestination(call.getOrigin());
 		sc.getClient().send(PayloadFactory.create(accept));
 	}
-
-	private void cancelCall() {
-		enableGlassPane = false;
-		initCallButton.setVisible(true);
-		showButtons(false);
-	}
-
+	
 	private void onAccept(AcceptCall call) {
 		if(call.isAccepted()) {
-			System.out.println("REMOTE ADDRESS: "+ call.getAddress());
 			AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoChatServiceManager.acceptCall();
@@ -150,6 +143,12 @@ public class VideoStreamingController {
 		}
 	}
 
+	private void cancelCall() {
+		enableGlassPane = false;
+		initCallButton.setVisible(true);
+		showButtons(false);
+	}
+	
 	private void initializeViewComponents() {
 		initButtonImages();
 
