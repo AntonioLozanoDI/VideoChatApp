@@ -1,5 +1,6 @@
 package application.controller.fxml;
 
+import application.controller.session.SessionController;
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
 import application.view.component.ContactCard;
@@ -25,7 +26,7 @@ public class MainController {
 	public interface Callback {
 		void call(ContactModel contact);
 	}
-	
+
 	@FXML
 	private VBox leftPaneVBox;
 	@FXML
@@ -41,37 +42,40 @@ public class MainController {
 
 	private VideoStreamingController videoStreamingController;
 
+	private SessionController sc;
+
 	private ContactDAO contactDAO;
 
 	private StackPane videoScreen;
-	
+
 	private Callback callback;
-	
+
 	private ContactModel selectedContact;
-	
+
 	private boolean alreadyAdded;
-	
+
 	private boolean liveStreaming;
 
 	@FXML
 	private void initialize() {
 		contactDAO = ContactDAO.getInstance();
-		
+		sc = SessionController.getInstance();
+
 		camIcon.setImage(ApplicationResourceProvider.getPNGFile(Constants.Files.Images.camIcon).toImage());
 		camIcon.setFitHeight(80);
 		camIcon.setFitWidth(80);
-		
+
 		contactDAO.addOnContactCreated((contact) -> addContact(contact));
 
-		callback = (contact) -> { 
-			selectedContact = contact; 
+		callback = (contact) -> {
+			selectedContact = contact;
 			setupVideoScreen();
 			videoStreamingController.setSelectedContact(selectedContact.getLogin());
 		};
-		
+
 		setFirstContactCard();
 		setupContacts();
-		
+
 		listView.setOnMouseClicked((event) -> {
 			if (event.getButton().equals(MouseButton.SECONDARY) && !liveStreaming) {
 				listView.getSelectionModel().clearSelection();
@@ -80,9 +84,9 @@ public class MainController {
 			}
 		});
 	}
-	
+
 	private void addContact(ContactModel contactModel) {
-		contactCards.add(ContactCard.fromContact(contactModel,callback).getParent());
+		contactCards.add(ContactCard.fromContact(contactModel, callback).getParent());
 	}
 
 	private void setFirstContactCard() {
@@ -90,7 +94,7 @@ public class MainController {
 	}
 
 	private void setupContacts() {
-		contactDAO.readAllContacts().stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc,callback).getParent()));
+		contactDAO.readAllContactsFromLoggedUser(sc.getLoggerUser()).stream().forEach(cc -> contactCards.add(ContactCard.fromContact(cc, callback).getParent()));
 		listView.setItems(contactCards);
 	}
 
@@ -98,7 +102,8 @@ public class MainController {
 		if (videoScreen == null) {
 			try {
 				FXMLLoader screenLoader = new FXMLLoader();
-				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
+				screenLoader.setLocation(
+						ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
 				videoScreen = screenLoader.load();
 				videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
 				videoScreen.prefWidthProperty().bind(rightPane.widthProperty());
@@ -108,8 +113,8 @@ public class MainController {
 				System.out.println(LoggingUtils.getStackTrace(e));
 			}
 		}
-		
-		if(!alreadyAdded) {
+
+		if (!alreadyAdded) {
 			rightPane.getChildren().add(videoScreen);
 			alreadyAdded = true;
 		}

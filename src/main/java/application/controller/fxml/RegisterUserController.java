@@ -10,6 +10,7 @@ import com.sp.fxutils.validation.FXUtils;
 
 import application.controller.session.SessionController;
 import application.model.ProfileModel;
+import application.model.dao.LogonServersDAO;
 import application.model.dao.ProfileDAO;
 import http.status.exceptions.Http409ConflictException;
 import javafx.fxml.FXML;
@@ -48,6 +49,8 @@ public class RegisterUserController {
 	
 	private ProfileDAO profileDAO;
 	
+	private LogonServersDAO logonServersDAO;
+	
 	private SessionController sc;
 	
 	private RegisterOperationListener registerListener;
@@ -58,6 +61,8 @@ public class RegisterUserController {
 		registerWarning.setId(Styles.Common.warningLabel);
 		
 		profileDAO = ProfileDAO.getInstance();
+		logonServersDAO = LogonServersDAO.getInstance();
+		
 		sc = SessionController.getInstance(); 
 		userClient = new UserClient();
 		configClient = new ConfigurationClient();
@@ -89,6 +94,7 @@ public class RegisterUserController {
 			try {
 				configClient.configureServer(serverField.getText());
 				userClient.signup(user);
+				logonServersDAO.saveServer(serverField.getText());
 				saveUser(user);
 				registerListener.notifyListener();
 				ok = true;

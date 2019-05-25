@@ -12,6 +12,7 @@ import com.sp.fxutils.validation.FXUtils;
 
 import application.controller.session.SessionController;
 import application.model.ProfileModel;
+import application.model.dao.LogonServersDAO;
 import application.model.dao.ProfileDAO;
 import application.view.modal.ApplicationModal;
 import application.view.modal.RegisterUserWindow;
@@ -21,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import utils.constants.Styles;
 
@@ -32,7 +32,7 @@ public class LoginController {
 	@FXML
 	private PasswordField passwordField;
 	@FXML
-	private TextField serverField;
+	private ComboBox<String> serverField;
 	@FXML
 	private Label loginWarning;
 	@FXML
@@ -52,6 +52,8 @@ public class LoginController {
 	
 	private ProfileDAO profileDAO;
 	
+	private LogonServersDAO serversDAO;
+	
 	private SessionController sc;
 
 	@FXML
@@ -60,9 +62,16 @@ public class LoginController {
 		loginWarning.setText("");
 		loginWarning.setId(Styles.Common.warningLabel);
 		profileDAO = ProfileDAO.getInstance();
+		serversDAO = LogonServersDAO.getInstance();
+		
 		loginField.setEditable(true);
 		loginField.setItems(FXCollections.observableArrayList(profileDAO.readAllProfiles().stream().map(prof -> prof.getLogin()).collect(Collectors.toList())));
 		loginField.getSelectionModel().selectFirst();
+		
+		serverField.setEditable(true);
+		serverField.setItems(FXCollections.observableArrayList(serversDAO.findAllServers()));
+		serverField.getSelectionModel().selectFirst();
+		
 		sc = SessionController.getInstance(); 
 		userClient = new UserClient();
 		configClient = new ConfigurationClient();
@@ -72,15 +81,16 @@ public class LoginController {
 	private void validateLogin() {
 		String login = loginField.getSelectionModel().getSelectedItem();
 		boolean passValid = FXUtils.textfieldTextIsNotNullOrEmpty(passwordField);
-		boolean serverValid = FXUtils.textfieldTextIsNotNullOrEmpty(serverField);
-		if (login != null && !login.isEmpty() && passValid && serverValid) {
+		String server = serverField.getSelectionModel().getSelectedItem();
+		if (login != null && !login.isEmpty() && passValid && server != null && !server.isEmpty()) {
 			User user = new User();
 			user.setLogin(login);
 			user.setPassword(passwordField.getText());
 			try {
-				configClient.configureServer(serverField.getText());
+				configClient.configureServer(server);
 				userClient.login(user);
 				loadProfile(user);
+				serversDAO.saveServer(server);
 				valid = true;
 				windowStage.close();
 			} catch (Http404NotFoundException e) {
@@ -112,8 +122,10 @@ public class LoginController {
 			ProfileModel newLoggedUser = ProfileModel.fromUser(found);
 			profileDAO.saveProfile(newLoggedUser);
 			sc.setLoggedUser(newLoggedUser);
+		} else {
+			sc.setLoggedUser(profileDAO.findByLogin(user.getLogin()));
 		}
-		sc.setServerAddress(serverField.getText());
+		sc.setServerAddress(serverField.getSelectionModel().getSelectedItem());
 		sc.setClient(new WebSocketClient(user.getLogin(), Origin.VIDEO));
 	}
 	

@@ -78,13 +78,13 @@ public abstract class AbstractStreamingSenderService extends Service {
 			try {
 				byte[] bufer = new byte[1024];
 				peticion = new DatagramPacket(bufer, bufer.length);
-				System.err.println("listening for datagrams on "+ port +" in address " +socketUDP.getLocalAddress().getHostName());
+				
+				logger.log(Level.INFO, "listening for datagrams on "+ port +" in address " +socketUDP.getLocalAddress().getHostName());
+				
 				socketUDP.receive(peticion);
 				
-				System.out.println("Cliente conectado.");
-				System.out.print("Datagrama recibido del host: " + peticion.getAddress());
-				System.out.println(" desde el puerto remoto: " + peticion.getPort());
-				
+				logger.log(Level.INFO,"Cliente conectado.");
+				logger.log(Level.INFO,"Datagrama recibido del host: " + peticion.getAddress() + " desde el puerto remoto: " + peticion.getPort());				
 				logger.log(Level.INFO, String.format("(%s) Petition received from: %s:%s", getClass().getSimpleName(), peticion.getAddress().getHostAddress(), peticion.getPort()));
 				
 				clientConnected = true;
