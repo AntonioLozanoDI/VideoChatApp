@@ -58,7 +58,6 @@ public class VideoRecordingService extends AbstractRecordingService {
 
 	@Override
 	public void startRecorder() {
-		System.out.println(String.format("BEFORE: pause %s, isAlive %s, recording %s", pause, isAlive(),recording));
 		if(!recording){
 			try {
 				grabber.start();
@@ -67,7 +66,6 @@ public class VideoRecordingService extends AbstractRecordingService {
 				super.startRecorder();
 			} catch (Exception e) {}
 		}
-		System.out.println(String.format("AFTER: pause %s, isAlive %s, recording %s", pause, isAlive(),recording));
 	}
 
 	@Override

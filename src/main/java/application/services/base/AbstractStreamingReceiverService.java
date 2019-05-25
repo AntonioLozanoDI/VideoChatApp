@@ -23,7 +23,7 @@ public abstract class AbstractStreamingReceiverService extends Service {
 	private List<ConnectionListener> listeners = new ArrayList<>();
 	
 	protected byte[] data;
-	protected InetAddress server;
+	protected InetAddress remote;
 	protected DatagramSocket socketUDP;
 	protected int port;
 	protected boolean configured;
@@ -47,7 +47,7 @@ public abstract class AbstractStreamingReceiverService extends Service {
 	
 	public final void setServerData(String serverAddress) {
 		try {
-			server = Inet4Address.getByName(serverAddress);
+			remote = Inet4Address.getByName(serverAddress);
 			configured = port != 0;
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -63,13 +63,13 @@ public abstract class AbstractStreamingReceiverService extends Service {
 		
 		new Thread(() ->  {
 			String trace = null;
-			DatagramPacket peticion = new DatagramPacket(buff, buff.length,server,port);
+			DatagramPacket peticion = new DatagramPacket(buff, buff.length,remote,port);
 			try {
 				socketUDP.receive(peticion);
 				connected = true;
 				
 				listeners.forEach(ConnectionListener::onClientConnected);
-				trace = getClass().getSimpleName() + " connected to " + server.getHostAddress() + ":" + port;
+				trace = getClass().getSimpleName() + " connected to " + remote.getHostAddress() + ":" + port;
 			} catch (IOException e) {
 				trace = LoggingUtils.getStackTrace(e);
 			}
@@ -82,6 +82,7 @@ public abstract class AbstractStreamingReceiverService extends Service {
 	}
 	
 	public void startReceiver() {
+		System.out.println(remote);
 		try {
 			sendPetition();
 			resumeService();

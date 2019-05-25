@@ -42,8 +42,7 @@ public class AudioRecordingService extends AbstractRecordingService implements A
 	}
 
 	@Override
-	public void startRecorder() {//TODO remove traces
-		System.out.println(String.format("BEFORE: pause %s, isAlive %s, lineIsRunning %s", pause, isAlive(),targetLine.isRunning()));
+	public void startRecorder() {
 		try {
 			pause = false;
 			targetLine.start();
@@ -51,20 +50,6 @@ public class AudioRecordingService extends AbstractRecordingService implements A
 		} catch (Exception e) {
 			System.err.println(LoggingUtils.getStackTrace(e));
 		}
-		System.out.println(String.format("AFTER: pause %s, isAlive %s, lineIsRunning %s", pause, isAlive(),targetLine.isRunning()));
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(10000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println(String.format("AFTER-2: pause %s, isAlive %s, lineIsRunning %s", pause, isAlive(),targetLine.isRunning()));
-			}
-		}).start();
 	}
 
 	@Override

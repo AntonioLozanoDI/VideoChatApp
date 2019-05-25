@@ -101,20 +101,6 @@ public class VideoChatServiceManager {
 		audioReceiver.startReceiver();
 		videoReceiver.startReceiver();
 	}
-	
-//	public static void initCall() {
-//		audioSender.startSender();
-//		videoSender.startSender();
-//		
-//		audioRecorder.startRecorder();
-//		videoRecorder.startRecorder();
-//		
-//		audioReceiver.startReceiver();
-//		videoReceiver.startReceiver();
-//
-//		audioPlayer.startPlayer();
-//		videoPlayer.startPlayer();
-//	}
 
 	public static void pauseCall() {
 		pausedCall = !pausedCall;
