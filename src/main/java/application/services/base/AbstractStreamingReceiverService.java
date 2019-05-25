@@ -82,7 +82,6 @@ public abstract class AbstractStreamingReceiverService extends Service {
 	}
 	
 	public void startReceiver() {
-		System.out.println(remote);
 		try {
 			sendPetition();
 			resumeService();

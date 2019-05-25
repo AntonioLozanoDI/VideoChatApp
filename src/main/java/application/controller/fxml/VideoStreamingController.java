@@ -1,6 +1,8 @@
 package application.controller.fxml;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.diproject.commons.model.message.types.AcceptCall;
 import com.diproject.commons.model.message.types.InitCall;
@@ -25,11 +27,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import utils.constants.Constants;
+import utils.logging.ApplicationLoggers;
 import utils.logging.LoggingUtils;
 import utils.resources.ApplicationResourceProvider;
 
 public class VideoStreamingController {
 
+	private Logger logger = ApplicationLoggers.controllerLogger;
+	
 	@FXML
 	private ImageView imageView;
 	@FXML
@@ -114,12 +119,14 @@ public class VideoStreamingController {
 					.finish().alert().showAndWait();
 			
 			if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
+				logger.log(Level.INFO, "Accepted call, started sender...");
 				connectionContact = call.getOrigin();
 				AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 				VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
 				init(false);
 				sendAccept(call);
 				VideoChatServiceManager.acceptCall();
+				logger.log(Level.INFO, "Acceppted call, started receiver...");
 			} else {
 				cancelCall();
 			}
@@ -137,11 +144,10 @@ public class VideoStreamingController {
 	
 	private void onAccept(AcceptCall call) {
 		if(call.isAccepted()) {
-			System.out.println("REMOTTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE: " + call.getAddress());
-			
 			AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
 			VideoChatServiceManager.acceptCall();
+			logger.log(Level.INFO, "Acceppted call, started receiver...");
 		} else {
 			cancelCall();
 		}
@@ -197,6 +203,7 @@ public class VideoStreamingController {
 		if (ownerOfAction) {
 			sendInitCall();
 		}
+		logger.log(Level.INFO, "Init call (" + (ownerOfAction ? "hostCall" : "clientCall") + ")");
 		enableGlassPane = true;
 		VideoChatServiceManager.initCall();
 		initCallButton.setVisible(false);
