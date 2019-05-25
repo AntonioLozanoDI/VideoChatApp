@@ -84,7 +84,9 @@ public abstract class AbstractStreamingSenderService extends Service {
 				System.out.println("Cliente conectado.");
 				System.out.print("Datagrama recibido del host: " + peticion.getAddress());
 				System.out.println(" desde el puerto remoto: " + peticion.getPort());
-				logger.log(Level.INFO, String.format("Petition received from: %s:%s", peticion.getAddress().getHostAddress(), peticion.getPort()));
+				
+				logger.log(Level.INFO, String.format("(%s) Petition received from: %s:%s", getClass().getSimpleName(), peticion.getAddress().getHostAddress(), peticion.getPort()));
+				
 				clientConnected = true;
 				
 				listeners.forEach(ConnectionListener::onClientConnected);
