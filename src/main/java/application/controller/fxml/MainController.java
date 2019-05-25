@@ -102,8 +102,7 @@ public class MainController {
 		if (videoScreen == null) {
 			try {
 				FXMLLoader screenLoader = new FXMLLoader();
-				screenLoader.setLocation(
-						ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
+				screenLoader.setLocation(ApplicationResourceProvider.getFXMLFile(Constants.Files.FXML.VideoScreenView).toURL());
 				videoScreen = screenLoader.load();
 				videoScreen.prefHeightProperty().bind(rightPane.heightProperty());
 				videoScreen.prefWidthProperty().bind(rightPane.widthProperty());

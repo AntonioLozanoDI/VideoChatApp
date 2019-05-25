@@ -42,6 +42,8 @@ public class SessionController {
 	}
 
 	public String getSelfClientAddress() {
+		if(selfClientAddress==null)
+			throw new RuntimeException("self address not configured");
 		return selfClientAddress;
 	}
 
