@@ -116,6 +116,7 @@ public class VideoChatServiceManager {
 			videoPlayer.resumePlayer();
 			if(activeMic)
 				audioRecorder.resumeRecorder();
+			
 			videoRecorder.resumeRecorder();
 		}
 	}

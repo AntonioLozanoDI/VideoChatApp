@@ -54,7 +54,6 @@ public class SessionController {
 	public void setClient(WebSocketClient wsc) {
 		this.wsc = wsc;
 		VideoChatHandler ph = VideoChatHandler.getInstance();
-		ph.setWebSocketClient(wsc);
 		wsc.setPayloadHandler(ph);
 		wsc.connect();
 	}

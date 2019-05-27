@@ -15,9 +15,7 @@ import application.controller.session.SessionController;
 import application.controller.ws.VideoChatHandler;
 import application.services.VideoChatServiceManager;
 import application.services.audio.receiver.AudioStreamingReceiverService;
-import application.services.audio.sender.AudioStreamingSenderService;
 import application.services.video.receiver.VideoStreamingReceiverService;
-import application.services.video.sender.VideoStreamingSenderService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -119,11 +117,11 @@ public class VideoStreamingController {
 					.finish().alert().showAndWait();
 			
 			if (btn.isPresent() && btn.get().equals(ButtonType.OK)) {
-				logger.log(Level.INFO, "Accepted call, started sender...");
 				connectionContact = call.getOrigin();
 				AudioStreamingReceiverService.getInstance().setServerData(call.getAddress());
 				VideoStreamingReceiverService.getInstance().setServerData(call.getAddress());
 				init(false);
+				logger.log(Level.INFO, "Accepted call, started sender...");
 				sendAccept(call);
 				VideoChatServiceManager.acceptCall();
 				logger.log(Level.INFO, "Acceppted call, started receiver...");
