@@ -59,11 +59,9 @@ public final class DatabaseHelper {
 		String ouPathFile = null;
 		try {
 			// Path desde donde se copiara la base de datos original
-			inPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.originalTestDatabaseFile)
-					.toString();
+			inPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.originalTestDatabaseFile).toString();
 			// Path donde se copiara la base de datos
-			ouPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.testDatabaseFile)
-					.toString();
+			ouPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.testDatabaseFile).toString();
 
 			File testDb = new File(ouPathFile);
 			if (Files.exists(testDb.toPath(), LinkOption.NOFOLLOW_LINKS)) {
@@ -86,8 +84,7 @@ public final class DatabaseHelper {
 		String ouPathFile = null;
 		try {
 			// Path desde donde se copiara la base de datos original
-			inPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.originalDatabaseFile)
-					.toString();
+			inPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.originalDatabaseFile).toString();
 			// Path donde se copiara la base de datos
 			ouPathFile = ApplicationResourceProvider.getDatabaseFile(Constants.Files.Database.databaseFile).toString();
 
@@ -126,13 +123,6 @@ public final class DatabaseHelper {
 		}
 	}
 
-	/**
-	 * Muestra las columnas de una tabla de un catálogo
-	 * 
-	 * @param catalogo
-	 * @param tabla
-	 * @throws SQLException
-	 */
 	public static void showColumns(Connection con, String tabla) throws SQLException {
 		DatabaseMetaData metaDatos = con.getMetaData();
 		ResultSet rs = metaDatos.getColumns(null, null, tabla, null);

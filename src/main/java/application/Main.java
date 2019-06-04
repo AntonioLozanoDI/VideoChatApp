@@ -8,11 +8,12 @@ import application.view.modal.LoginWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import utils.database.DatabaseHelper;
+import utils.resources.EnvironmentLoader;
 
 public class Main extends Application {
 	
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) {		
 		DatabaseHelper.askApplicationDatabase();
 		DatabaseHelper.ensureDatabaseExists();
 		ApplicationModal.build(LoginWindow.class, null).showView();
@@ -26,6 +27,7 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
+		EnvironmentLoader.configure(args);
 		launch(args);
 	}
 

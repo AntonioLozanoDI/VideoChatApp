@@ -1,5 +1,6 @@
 package utils.logging;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
@@ -12,6 +13,8 @@ import java.util.logging.Logger;
 
 import utils.constants.Constants;
 import utils.resources.ApplicationResourceProvider;
+import utils.resources.ResourcePathFactory;
+import utils.resources.ResourcePathFactory.OriginPathToProjectDir;
 
 public final class ApplicationLoggers {
 
@@ -29,10 +32,12 @@ public final class ApplicationLoggers {
 	
 	static {
 		try {
+			ensureTempFolder();
 			configureLogManager();
 			configureRootLogger();
-			
+
 			consoleHandler =  new ConsoleHandler();
+
 			applicationHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.applicationLogFile).toString());
 			modelHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.modelLogFile).toString());
 			controllerHandler = new FileHandler(ApplicationResourceProvider.getLogFile(Constants.Files.Logs.controllerLogFile).toString());
@@ -53,7 +58,7 @@ public final class ApplicationLoggers {
 	public static Logger controllerLogger 	= create("VideoChat.logger.controller", controllerHandler);
 	public static Logger viewLogger 		= create("VideoChat.logger.view", viewHandler);
 	public static Logger utilsLogger 		= create("VideoChat.logger.utils", utilsHandler);
-	public static Logger servicesLogger 		= create("VideoChat.logger.services", servicesHandler);
+	public static Logger servicesLogger 	= create("VideoChat.logger.services", servicesHandler);
 
 	private static Logger create(String name, Handler...handlers) {
 		Logger l = Logger.getLogger(name);
@@ -64,6 +69,12 @@ public final class ApplicationLoggers {
 		return l;
 	}
 
+	private static void ensureTempFolder() {
+		File f = new File(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, Constants.FilePaths.logs));
+		if(!f.exists())
+			f.mkdirs();
+	}
+	
 	private static void configureLogManager() throws SecurityException, FileNotFoundException, IOException {
 		LogManager.getLogManager().readConfiguration(ApplicationResourceProvider.getPropertiesFile("logging").toInputStream());
 	}

@@ -48,6 +48,7 @@ public class LoginWindow extends ApplicationModal {
 			logger.finer(String.format("%s successfully loaded. Resource loaded: %s", getClass().getSimpleName(), LoggingUtils.cleanFXMLPath(resource.getPath())));
 
 		} catch (IOException e) {
+			System.out.println(LoggingUtils.getStackTrace(e));
 			DialogBuilder.error()
 			.title(String.format("FXML view load error", e.getClass().getSimpleName()))
 			.header(String.format("An error ocurred while attempting to load \'.fxml\' file: %n%s", LoggingUtils.cleanFXMLPath(resource.getPath())))

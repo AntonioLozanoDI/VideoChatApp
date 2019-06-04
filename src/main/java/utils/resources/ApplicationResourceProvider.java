@@ -15,15 +15,11 @@ import utils.resources.exception.ResourceAccessException;
 
 public final class ApplicationResourceProvider implements ResourceProvider {
 
-	private	String path;
-	private	ApplicationResource type;
+	private	String filename;
+	private	ApplicationResourceType type;
 
-	enum ApplicationResource {
-		DATABASE, PNG, FXML, PROPERTIES, CSS, LOGS;
-	}
-
-	private ApplicationResourceProvider(String path, ApplicationResource type) {
-		this.path = path;
+	private ApplicationResourceProvider(String filename, ApplicationResourceType type) {
+		this.filename = filename;
 		this.type = type;
 	}
 
@@ -36,17 +32,17 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 	public File toFile() {
 		switch (type) {
 		case CSS:
-			return new File(ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+			return new File(ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 		case DATABASE:
-			return new File(ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+			return new File(ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 		case FXML:
-			return new File(ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+			return new File(ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 		case PNG:
-			return new File(ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+			return new File(ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 		case LOGS:
-			return new File(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, path));
+			return new File(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, filename));
 		case PROPERTIES:
-			return new File(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+			return new File(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 		}
 		return null;
 	}
@@ -54,17 +50,17 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 	public URL toURL() {
 		switch (type) {
 		case CSS:
-			return Main.class.getResource(ResourcePathFactory.getCSSFilePath(OriginPathToBin.MAIN_CLASS, path));
+			return Main.class.getResource(ResourcePathFactory.getCSSFilePath(OriginPathToBin.MAIN_CLASS, filename));
 		case DATABASE:
-			return Main.class.getResource(ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.MAIN_CLASS, path));
+			return Main.class.getResource(ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.MAIN_CLASS, filename));
 		case FXML:
-			return Main.class.getResource(ResourcePathFactory.getFXMLFilePath(OriginPathToBin.MAIN_CLASS, path));
+			return Main.class.getResource(ResourcePathFactory.getFXMLFilePath(OriginPathToBin.MAIN_CLASS, filename));
 		case PNG:
-			return Main.class.getResource(ResourcePathFactory.getPNGFilePath(OriginPathToBin.MAIN_CLASS, path));
+			return Main.class.getResource(ResourcePathFactory.getPNGFilePath(OriginPathToBin.MAIN_CLASS, filename));
 		case LOGS:
-			return Main.class.getResource(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.MAIN_CLASS, path));
+			return Main.class.getResource(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.MAIN_CLASS, filename));
 		case PROPERTIES:
-			return Main.class.getResource(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.MAIN_CLASS, path));
+			return Main.class.getResource(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.MAIN_CLASS, filename));
 		}
 		return null;
 	}
@@ -78,7 +74,7 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 		case PROPERTIES:
 			throw new ResourceAccessException(type.name(), "javafx.scene.image.Image");
 		case PNG:
-			return new Image("file:" + ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+			return new Image("file:" + ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 		}
 		return null;
 	}
@@ -86,17 +82,17 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 	public String toString() {
 		switch (type) {
 		case CSS:
-			return ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
+			return ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
 		case DATABASE:
-			return ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
+			return ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
 		case FXML:
-			return ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
+			return ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
 		case PNG:
-			return ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
+			return ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
 		case LOGS:
-			return ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, path);
+			return ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, filename);
 		case PROPERTIES:
-			return ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
+			return ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
 		}
 		return null;
 	}
@@ -107,26 +103,19 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 		try {
 			switch (type) {
 			case CSS:
-				filepath = ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
-				is = new FileInputStream(ResourcePathFactory.getCSSFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case DATABASE:
-				filepath = ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
-				is = new FileInputStream(ResourcePathFactory.getDatabaseFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case FXML:
-				filepath = ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
-				is = new FileInputStream(ResourcePathFactory.getFXMLFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
-			case PNG:
-				filepath = ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
-				is = new FileInputStream(ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
 			case LOGS:
-				filepath = ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, path);
-				is = new FileInputStream(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, path));
+				throw new ResourceAccessException(type.name(), "java.io.InputStream");
 			case PROPERTIES:
-				filepath = ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, path);
-				is = new FileInputStream(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, path));
+				String s = ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
+				System.out.println(s);
+				is = new FileInputStream(s);
+				break;
+			case PNG:
+				is = new FileInputStream(ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 			}
 		} catch (FileNotFoundException e) {
-			System.err.println(filepath);
 			throw new ResourceAccessException(filepath);
 		}
 		return is;
@@ -139,26 +128,26 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 	 ********************************************************************************************************/
 	
 	public static ResourceProvider getDatabaseFile(String fileName) {
-		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResource.DATABASE);
+		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResourceType.DATABASE);
 	}
 	
 	public static ResourceProvider getFXMLFile(String fileName) {
-		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResource.FXML);
+		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResourceType.FXML);
 	}
 	
 	public static ResourceProvider getCSSFile(String fileName) {
-		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResource.CSS);
+		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResourceType.CSS);
 	}
 	
 	public static ResourceProvider getLogFile(String fileName) {
-		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResource.LOGS);
+		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResourceType.LOGS);
 	}
 	
 	public static ResourceProvider getPNGFile(String fileName) {
-		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResource.PNG);
+		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResourceType.PNG);
 	}
 	
 	public static ResourceProvider getPropertiesFile(String fileName) {
-		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResource.PROPERTIES);
+		return new ApplicationResourceProvider(Objects.requireNonNull(fileName), ApplicationResourceType.PROPERTIES);
 	}
 }
