@@ -109,7 +109,7 @@ public class VideoStreamingController {
 		initializeViewComponents();
 	}
 
-	private void onInit(InitCall call) {
+	public void onInit(InitCall call) {
 		initCallButton.setVisible(false);
 		Platform.runLater(()->{
 			Optional<ButtonType> btn = DialogBuilder.confirmation()

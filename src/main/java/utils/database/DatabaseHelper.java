@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import com.sp.dialogs.DialogBuilder;
 
 import javafx.scene.control.ButtonType;
+import utils.EnvironmentLoader;
 import utils.constants.Constants;
 import utils.logging.ApplicationLoggers;
 import utils.logging.LoggingUtils;
@@ -22,23 +23,30 @@ import utils.resources.ApplicationResourceProvider;
 
 public final class DatabaseHelper {
 
-	static Logger logger = ApplicationLoggers.utilsLogger;
+	private static Logger logger = ApplicationLoggers.utilsLogger;
 
 	private static String propertiesToLoad = null;
+	
+	private static boolean developEnvironment = false;
 
 	private static boolean useTestingDB = false;
-
-	private DatabaseHelper() {
+	
+	static {
+		developEnvironment = EnvironmentLoader.isDevelopEnvironment();
 	}
+	
+	private DatabaseHelper() {}
 
 	public static void askApplicationDatabase() {
-		Optional<ButtonType> btn = DialogBuilder.confirmation().title("Database initialization")
-				.header("Use testing database?").finish().alert().showAndWait();
+		if(developEnvironment) {
+			Optional<ButtonType> btn = DialogBuilder.confirmation()
+					.title("Database initialization")
+					.header("Use testing database?")
+					.finish().alert().showAndWait();
 
-		useTestingDB = btn.isPresent() && btn.get().equals(ButtonType.OK);
-
+			useTestingDB = btn.isPresent() && btn.get().equals(ButtonType.OK);
+		}
 		logger.info(String.format("Using %s database.", useTestingDB ? "testing" : "application"));
-
 		String fileName = useTestingDB ? Constants.Files.Properties.testingSqliteProperties : Constants.Files.Properties.sqliteProperties;
 		propertiesToLoad = ApplicationResourceProvider.getPropertiesFile(fileName).toString();
 	}

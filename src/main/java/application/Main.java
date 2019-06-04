@@ -7,8 +7,8 @@ import application.view.modal.ApplicationModal;
 import application.view.modal.LoginWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import utils.EnvironmentLoader;
 import utils.database.DatabaseHelper;
-import utils.resources.EnvironmentLoader;
 
 public class Main extends Application {
 	@Override

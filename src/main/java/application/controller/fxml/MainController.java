@@ -1,6 +1,7 @@
 package application.controller.fxml;
 
 import application.controller.session.SessionController;
+import application.controller.ws.VideoChatHandler;
 import application.model.ContactModel;
 import application.model.dao.ContactDAO;
 import application.view.component.ContactCard;
@@ -52,6 +53,8 @@ public class MainController {
 
 	private ContactModel selectedContact;
 
+	private VideoChatHandler vch;
+	
 	private boolean alreadyAdded;
 
 	private boolean liveStreaming;
@@ -60,19 +63,27 @@ public class MainController {
 	private void initialize() {
 		contactDAO = ContactDAO.getInstance();
 		sc = SessionController.getInstance();
-
+		vch = VideoChatHandler.getInstance();
+		
 		camIcon.setImage(ApplicationResourceProvider.getPNGFile(Constants.Files.Images.camIcon).toImage());
 		camIcon.setFitHeight(80);
 		camIcon.setFitWidth(80);
 
 		contactDAO.addOnContactCreated((contact) -> addContact(contact));
 
+		vch.setOnInitCall((call) -> {
+			if(!alreadyAdded) {
+				setupVideoScreen();
+				videoStreamingController.onInit(call);
+			}
+		});
+		
 		callback = (contact) -> {
 			selectedContact = contact;
 			setupVideoScreen();
 			videoStreamingController.setSelectedContact(selectedContact.getLogin());
 		};
-
+		
 		setFirstContactCard();
 		setupContacts();
 
