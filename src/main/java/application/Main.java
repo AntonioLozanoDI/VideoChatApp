@@ -11,7 +11,6 @@ import utils.database.DatabaseHelper;
 import utils.resources.EnvironmentLoader;
 
 public class Main extends Application {
-	
 	@Override
 	public void start(Stage primaryStage) {		
 		DatabaseHelper.askApplicationDatabase();
@@ -30,5 +29,4 @@ public class Main extends Application {
 		EnvironmentLoader.configure(args);
 		launch(args);
 	}
-
 }

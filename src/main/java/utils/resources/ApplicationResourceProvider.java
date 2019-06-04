@@ -108,9 +108,7 @@ public final class ApplicationResourceProvider implements ResourceProvider {
 			case LOGS:
 				throw new ResourceAccessException(type.name(), "java.io.InputStream");
 			case PROPERTIES:
-				String s = ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, filename);
-				System.out.println(s);
-				is = new FileInputStream(s);
+				is = new FileInputStream(ResourcePathFactory.getPropertiesFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));
 				break;
 			case PNG:
 				is = new FileInputStream(ResourcePathFactory.getPNGFilePath(OriginPathToBin.ROOT_DIRECTORY, filename));

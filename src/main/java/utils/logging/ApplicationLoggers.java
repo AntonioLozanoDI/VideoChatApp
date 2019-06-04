@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 
 import utils.constants.Constants;
 import utils.resources.ApplicationResourceProvider;
-import utils.resources.ResourcePathFactory;
-import utils.resources.ResourcePathFactory.OriginPathToProjectDir;
 
 public final class ApplicationLoggers {
 
@@ -32,7 +30,7 @@ public final class ApplicationLoggers {
 	
 	static {
 		try {
-			ensureTempFolder();
+			ensureLogsFolder();
 			configureLogManager();
 			configureRootLogger();
 
@@ -69,8 +67,8 @@ public final class ApplicationLoggers {
 		return l;
 	}
 
-	private static void ensureTempFolder() {
-		File f = new File(ResourcePathFactory.getLogFilePath(OriginPathToProjectDir.ROOT_DIRECTORY, Constants.FilePaths.logs));
+	private static void ensureLogsFolder() {
+		File f = ApplicationResourceProvider.getLogFile("").toFile();
 		if(!f.exists())
 			f.mkdirs();
 	}

@@ -39,8 +39,7 @@ public final class DatabaseHelper {
 
 		logger.info(String.format("Using %s database.", useTestingDB ? "testing" : "application"));
 
-		String fileName = useTestingDB ? Constants.Files.Properties.testingSqliteProperties
-				: Constants.Files.Properties.sqliteProperties;
+		String fileName = useTestingDB ? Constants.Files.Properties.testingSqliteProperties : Constants.Files.Properties.sqliteProperties;
 		propertiesToLoad = ApplicationResourceProvider.getPropertiesFile(fileName).toString();
 	}
 
@@ -72,8 +71,7 @@ public final class DatabaseHelper {
 
 			logger.info("Created new testing database.");
 		} catch (Exception e) {
-			logger.severe("error copying testing database file. Files located in \norigin: " + inPathFile + "\noutput: "
-					+ ouPathFile + "\n" + LoggingUtils.getStackTrace(e));
+			logger.severe("error copying testing database file. Files located in \norigin: " + inPathFile + "\noutput: " + ouPathFile + "\n" + LoggingUtils.getStackTrace(e));
 			logger.severe("Exiting from application.");
 			System.exit(-1);
 		}

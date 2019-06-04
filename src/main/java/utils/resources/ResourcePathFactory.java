@@ -33,7 +33,6 @@ public class ResourcePathFactory {
 			fullPath = fullPath(Constants.OSIndependentPath(paths.fromMainClass.projectClassesDir(), directory, name), ext);
 			break;
 		}
-//		System.out.println(fullPath);//TODO remove
 		return fullPath;
 	}
 	
@@ -47,7 +46,6 @@ public class ResourcePathFactory {
 			fullPath = fullPath(Constants.OSIndependentPath(paths.fromMainClass.rootProjectDir(), directory, name), ext);
 			break;
 		}
-//		System.out.println(fullPath);//TODO remove
 		return fullPath;
 	}
 	
